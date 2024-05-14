@@ -1,9 +1,19 @@
 import Piece from "../../piece";
 
-const Cell = ({cellId, pieceId}) => {
+const Cell = ({
+    cellId, 
+    pieceId, 
+    clickMovePiece,
+    isSelected
+    }) => {
 
     return (
-        <div key={cellId} id={cellId} className="flex items-center justify-center bg-gray-200 w-9 h-9 min-w-9 min-h-9 md:w-20 md:h-20">
+        <div 
+            className={`flex items-center justify-center bg-gray-200 w-9 h-9 min-w-9 min-h-9 md:w-20 md:h-20 ${isSelected ? 'bg-slate-300' : ''}`} 
+            key={cellId} 
+            id={cellId} 
+            onClick={clickMovePiece}
+        >
             {pieceId ? <Piece pieceId={pieceId}/> : null}
         </div>
     );
