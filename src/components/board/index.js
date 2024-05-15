@@ -73,7 +73,7 @@ function Board() {
     });
 
     return (
-        <div className="flex items-center justify-center min-h-screen mx-auto my-auto bg-white">
+        <div className="flex items-center justify-center mx-auto my-8 bg-white">
             <div className="grid grid-cols-9 gap-1">
                 {cells.map((cell) => (
                     <Cell 
