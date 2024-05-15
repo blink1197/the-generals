@@ -12,6 +12,8 @@ function Board() {
     const [selectedCell, setSelectedCell] = useState("");
     const [adjacentCells, setAdjacentCells] = useState([]);
     const [validCellsToMove, setValidCellsToMove] = useState([]);
+    const [moveHistory, setMoveHistory] = useState([]);
+    const [lostUnits, setLostUnits] = useState([]);
 
     const getAdjacentCells = (cell) => {
         const columns = COLUMNS.split('');
