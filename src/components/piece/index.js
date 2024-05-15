@@ -12,7 +12,7 @@ const Piece = ({ pieceId }) => {
 
     return (
         <div 
-            className="flex items-center justify-center w-5/6 bg-white border border-gray-400 rounded-md shadow-md h-5/6" 
+            className={`flex items-center justify-center w-5/6 bg-white border border-gray-400 rounded-md shadow-md h-5/6 ${pieceId === 'B' ? 'bg-zinc-800' : ''}`} 
             style={imageSrc ? backgroundStyle : {}}
         >
         </div>
