@@ -2,7 +2,7 @@
 const MoveHistory = ({ }) => {
 
     return (
-        <div className="ml-4 w-60 h-[668px] border border-gray-200">
+        <div className="h-full ml-4 border border-gray-200 w-60">
             <table className="w-full text-[12px] text-center border">
                 <thead className="w-full">
                     <tr className="w-full bg-gray-200">
