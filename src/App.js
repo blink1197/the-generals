@@ -6,31 +6,32 @@ import SideBar from './components/sidebar';
 import { useEffect } from 'react';
 import io from 'socket.io-client';
 
-const socket = io.connect("http://localhost:3001")
+//const socket = io.connect("http://localhost:3001")
 
 
 function App() {
 
-  useEffect(() => {
-    socket.on('connect', () => {
-      console.log('connected to server');
-    });
+  // useEffect(() => {
+  //   socket.on('connect', () => {
+  //     console.log('connected to server');
+  //   });
 
-    socket.on('disconnect', () => {
-      console.log('disconnected from server');
-    });
+  //   socket.on('disconnect', () => {
+  //     console.log('disconnected from server');
+  //   });
 
-    return () => {
-      socket.off('connect');
-      socket.off('disconnect');
-    };
-  }, []);
+  //   return () => {
+  //     socket.off('connect');
+  //     socket.off('disconnect');
+  //   };
+  // }, []);
   
   return (
     <div className='flex h-full font-outfit'>
+      <SideBar />
       <div className='flex items-center mx-auto'>
-        <SideBar />
-        <div className='flex flex-col w-fit'>
+        
+        <div className='flex flex-col ml-10 w-fit'>
           <PlayerCard color={'B'}/>
           <Board />
           <PlayerCard />
