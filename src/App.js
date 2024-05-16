@@ -5,39 +5,31 @@ import MoveHistory from './components/moveHistory';
 import SideBar from './components/sidebar';
 import { useEffect } from 'react';
 import io from 'socket.io-client';
-
-//const socket = io.connect("http://localhost:3001")
+import { Route, Routes } from 'react-router-dom';
+import Home from './pages/home';
+import Play from './pages/play';
+import Rules from './pages/rules';
+import Watch from './pages/watch';
+import Socials from './pages/socials';
+import Settings from './pages/settings';
+import Account from './pages/account';
+import Help from './pages/help';
 
 
 function App() {
-
-  // useEffect(() => {
-  //   socket.on('connect', () => {
-  //     console.log('connected to server');
-  //   });
-
-  //   socket.on('disconnect', () => {
-  //     console.log('disconnected from server');
-  //   });
-
-  //   return () => {
-  //     socket.off('connect');
-  //     socket.off('disconnect');
-  //   };
-  // }, []);
-  
   return (
     <div className='flex h-full font-outfit'>
       <SideBar />
-      <div className='flex items-center mx-auto'>
-        
-        <div className='flex flex-col ml-10 w-fit'>
-          <PlayerCard color={'B'}/>
-          <Board />
-          <PlayerCard />
-        </div>
-        <MoveHistory />
-      </div>
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/play' element={<Play />} />
+        <Route path='/rules' element={<Rules />} />
+        <Route path='/watch' element={<Watch />} />
+        <Route path='/socials' element={<Socials />} />
+        <Route path='/account' element={<Account />} />
+        <Route path='/settings' element={<Settings />} />
+        <Route path='/help' element={<Help />} />
+      </Routes>
       
     </div>
   );
