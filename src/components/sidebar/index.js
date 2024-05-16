@@ -59,28 +59,16 @@ const SideBar = () => {
                 </div>
             </div>
             <div className="w-full py-4 bg-neutral-200">
-                <div
-                    className="flex items-center p-2 mx-6 text-lg font-semibold transition-transform duration-300 rounded-sm hover:bg-neutral-700 hover:text-white hover:cursor-pointer hover:scale-105"
-                    onMouseEnter={() => setIsHoverDarkMode(true)}
-                    onMouseLeave={() => setIsHoverDarkMode(false)}
-                >
-                    <DarkModeIcon width={6} height={6} color={isHoverDarkMode ? 'white' : undefined} />
+                <div className="flex items-center p-2 mx-6 text-lg font-semibold transition-transform duration-300 rounded-sm hover:cursor-pointer hover:scale-105">    
+                    <DarkModeIcon width={6} height={6} />
                     <h1 className="ml-2">Dark Mode</h1>
                 </div>
-                <div
-                    className="flex items-center p-2 mx-6 text-lg font-semibold transition-transform duration-300 rounded-sm hover:bg-neutral-700 hover:text-white hover:cursor-pointer hover:scale-105"
-                    onMouseEnter={() => setIsHoverSettings(true)}
-                    onMouseLeave={() => setIsHoverSettings(false)}
-                >
-                    <SettingsIcon width={6} height={6} color={isHoverSettings ? 'white' : undefined} />
+                <div className="flex items-center p-2 mx-6 text-lg font-semibold transition-transform duration-300 rounded-sm hover:cursor-pointer hover:scale-105">
+                    <SettingsIcon width={6} height={6} />
                     <h1 className="ml-2">Settings</h1>
                 </div>
-                <div
-                    className="flex items-center p-2 mx-6 text-lg font-semibold transition-transform duration-300 rounded-sm hover:bg-neutral-700 hover:text-white hover:cursor-pointer hover:scale-105"
-                    onMouseEnter={() => setIsHoverHelp(true)}
-                    onMouseLeave={() => setIsHoverHelp(false)}
-                >
-                    <HelpIcon width={6} height={6} color={isHoverHelp ? 'white' : undefined} />
+                <div className="flex items-center p-2 mx-6 text-lg font-semibold transition-transform duration-300 rounded-sm hover:cursor-pointer hover:scale-105">
+                    <HelpIcon width={6} height={6}/>
                     <h1 className="ml-2">Help</h1>
                 </div>
             </div>
