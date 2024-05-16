@@ -7,10 +7,7 @@ const SideBar = () => {
     const [isHoverWatch, setIsHoverWatch] = useState(false);
     const [isHoverSocials, setIsHoverSocials] = useState(false);
     const [isHoverAccount, setIsHoverAccount] = useState(false);
-    const [isHoverDarkMode, setIsHoverDarkMode] = useState(false);
-    const [isHoverSettings, setIsHoverSettings] = useState(false);
-    const [isHoverHelp, setIsHoverHelp] = useState(false);
-
+    
     return (
         <div className="flex flex-col items-center justify-between bg-neutral-100 w-60 h-dvh">
             <div className="my-4">
