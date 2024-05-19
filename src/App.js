@@ -1,10 +1,4 @@
-
-import Board from './components/board';
-import PlayerCard from './components/playerCard';
-import MoveHistory from './components/moveHistory';
 import SideBar from './components/sidebar';
-import { useEffect } from 'react';
-import io from 'socket.io-client';
 import { Route, Routes } from 'react-router-dom';
 import Home from './pages/home';
 import Play from './pages/play';
