@@ -8,23 +8,28 @@ import Socials from './pages/socials';
 import Settings from './pages/settings';
 import Account from './pages/account';
 import Help from './pages/help';
+import TopBar from './components/topbar';
 
 
 function App() {
   return (
-    <div className='flex h-full font-outfit'>
+    <div className='flex w-screen h-screen font-outfit'>
       <SideBar />
-      <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/play' element={<Play />} />
-        <Route path='/rules' element={<Rules />} />
-        <Route path='/watch' element={<Watch />} />
-        <Route path='/socials' element={<Socials />} />
-        <Route path='/account' element={<Account />} />
-        <Route path='/settings' element={<Settings />} />
-        <Route path='/help' element={<Help />} />
-      </Routes>
-      
+      <div className='relative flex-grow h-full min-w-[360px]' >
+        <TopBar />
+        <div className='h-full pt-16 overflow-auto md:pt-0'>
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/play' element={<Play />} />
+            <Route path='/rules' element={<Rules />} />
+            <Route path='/watch' element={<Watch />} />
+            <Route path='/socials' element={<Socials />} />
+            <Route path='/account' element={<Account />} />
+            <Route path='/settings' element={<Settings />} />
+            <Route path='/help' element={<Help />} />
+          </Routes>
+        </div>
+      </div>
     </div>
   );
 }
