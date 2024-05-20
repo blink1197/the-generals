@@ -1,9 +1,13 @@
 import axios from "axios";
 
+const apiUrl = window.location.hostname === 'localhost'
+  ? process.env.REACT_APP_API_URL_LOCAL
+  : process.env.REACT_APP_API_URL_NETWORK
+
 class AxiosService {
   constructor() {
     this.instance = axios.create({
-      baseURL: process.env.REACT_APP_API_BASE_URL,
+      baseURL: apiUrl,
       timeout: 10000,
       headers: {
         "Content-Type": "application/json",
