@@ -1,7 +1,7 @@
 const Logo = ({ color, width, height }) => {
   return (
     <svg
-      className="hidden md:block"
+      className="hidden lg:block"
       width="218"
       height="78"
       viewBox="0 0 218 78"
@@ -573,7 +573,7 @@ const HelpIcon = ({ color, width, height }) => {
 };
 
 const LogoSmall = ({ color, width, height }) => {
-  const style = `w-10 h-10 block md:hidden`;
+  const style = `w-10 h-10 block lg:hidden`;
   return (
     <svg className={style} width="95" height="50" viewBox="0 0 95 50" fill={color || "#27272A"} xmlns="http://www.w3.org/2000/svg">
       <path d="M1.54953 48.7436L0 43.1455L30.0883 0.517533L34.3985 10.7563L14.8367 39.3283L43.1427 39.1563L45.4317 50L1.54953 48.7436Z" fill="#27272A" />

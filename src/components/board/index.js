@@ -29,7 +29,7 @@ function Board() {
             { dc: 0, dr: -1 },  // above
             { dc: 0, dr: 1 }    // below
         ];
-      
+
         directions.forEach(({ dc, dr }) => {
             const newColumnIndex = columnIndex + dc;
             const newRowIndex = rowIndex + dr;
@@ -37,30 +37,30 @@ function Board() {
                 adjacentCells.push(columns[newColumnIndex] + rows[newRowIndex]);
             }
         });
-      
+
         return adjacentCells;
     };
 
     const clickMovePiece = (event) => {
         const { id } = event.currentTarget;
         if (selectedCell !== "") {
-          const selectedPiece = boardState[selectedCell];
-          const isDestinationAdjacent = adjacentCells.includes(id);
-    
-          if (isDestinationAdjacent && !boardState[id] && selectedPiece) {
-            const updatedBoardState = { ...boardState };
-            updatedBoardState[id] = selectedPiece;
-            updatedBoardState[selectedCell] = null;
-            setBoardState(updatedBoardState);
-          }
-          setSelectedCell("");
-          setValidCellsToMove([]);
+            const selectedPiece = boardState[selectedCell];
+            const isDestinationAdjacent = adjacentCells.includes(id);
+
+            if (isDestinationAdjacent && !boardState[id] && selectedPiece) {
+                const updatedBoardState = { ...boardState };
+                updatedBoardState[id] = selectedPiece;
+                updatedBoardState[selectedCell] = null;
+                setBoardState(updatedBoardState);
+            }
+            setSelectedCell("");
+            setValidCellsToMove([]);
         } else {
-          setSelectedCell(id);
-          const adjacent = getAdjacentCells(id);
-          setAdjacentCells(adjacent);
-          const validMoves = adjacent.filter(cell => !boardState[cell]);
-          setValidCellsToMove(validMoves);
+            setSelectedCell(id);
+            const adjacent = getAdjacentCells(id);
+            setAdjacentCells(adjacent);
+            const validMoves = adjacent.filter(cell => !boardState[cell]);
+            setValidCellsToMove(validMoves);
         }
     };
 
@@ -71,17 +71,17 @@ function Board() {
     const cells = Array.from({ length: NUM_ROWS * NUM_COLS }, (_, index) => {
         const row = Math.floor(index / NUM_COLS);
         const col = index % NUM_COLS;
-        return generateCellId(NUM_ROWS - row - 1, col); 
+        return generateCellId(NUM_ROWS - row - 1, col);
     });
 
     return (
-        <div className="flex items-center justify-center mx-auto my-8 bg-white">
-            <div className="grid grid-cols-9 gap-1">
+        <div className="flex items-center justify-center mx-auto my-8 bg-white ">
+            <div className="grid grid-cols-9 sm:gap-0.5 gap-[1px] md:gap-1">
                 {cells.map((cell) => (
-                    <Cell 
-                        key={cell} 
-                        cellId={cell} 
-                        pieceId={boardState[cell]} 
+                    <Cell
+                        key={cell}
+                        cellId={cell}
+                        pieceId={boardState[cell]}
                         clickMovePiece={clickMovePiece}
                         isSelected={cell === selectedCell}
                         isValidCellToMove={validCellsToMove.includes(cell) && boardState[selectedCell]}
@@ -89,7 +89,7 @@ function Board() {
                 ))}
             </div>
         </div>
-        
+
     );
 }
 
