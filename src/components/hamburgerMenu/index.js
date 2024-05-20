@@ -29,7 +29,7 @@ function HamburgerMenu() {
                     <HamburgerIcon />
                 )}
             </button>
-            <div ref={menuRef} className={`absolute left-0 w-full mt-2 text-xl font-bold bg-white rounded-lg shadow-lg top-12 font-outfit transition-all duration-500 ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[-100%]'}`}>
+            <div ref={menuRef} className={`absolute left-0 w-full mt-2 text-xl font-bold bg-white rounded-lg shadow-lg top-12 font-outfit transition-all duration-500 ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[-100%]'} z-50`}>
                 {isOpen && (
                     <>
                         <Link to="/">

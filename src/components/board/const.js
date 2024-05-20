@@ -19,7 +19,7 @@ const INITIAL_BOARD_STATE = {
     "I2": "CAP-W",
     "A3": "MAJ-W",
     "B3": "LCL-W",
-    "C3": "CNL-W",
+    "C3": "COL-W",
     "D3": "",
     "E3": "",
     "F3": "",
