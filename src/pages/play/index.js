@@ -6,14 +6,17 @@ import MatchOptions from "../../components/matchOptions";
 function Play() {
     return (
         // <MatchOptions />
-        <div className="flex items-center mx-auto">
+        <div className="flex flex-col items-center mx-auto">
 
-            <div className="flex flex-col mx-auto mt-4 w-fit">
-                <PlayerCard color={"B"} />
-                <Board />
-                <PlayerCard />
+            <div className="flex flex-col mx-auto mt-4 w-fit xl:flex-row">
+                <div>
+                    <PlayerCard color={"B"} />
+                    <Board />
+                    <PlayerCard />
+                </div>
+                <MoveHistory />
             </div>
-            {/* <MoveHistory /> */}
+
         </div>
 
     );
