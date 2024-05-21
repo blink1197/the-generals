@@ -10,12 +10,17 @@ import { v4 as uuidv4 } from 'uuid';
 function Play() {
     const [matchType, setMatchType] = useState(null);
     const [friendlyMatchCode, setFriendlyMatchCode] = useState('');
-    const [matchStarted, setMatchStarted] = useState(false);
     const [userId] = useState(uuidv4());
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const [socket, setSocket] = useState(null);
     const [isSocketConnected, setIsSocketConnected] = useState(false);
+    const [opponentUserName, setOpponentUserName] = useState("");
+    const [matchStatus, setMatchStatus] = useState("not yet started");
+    const [playerColor, setPlayerColor] = useState("white");
+    const [connectionId, setConnectionId] = useState("");
+    const [playerUserName, setPlayerUserName] = useState("User-Player");
+
 
     const getMatchId = useCallback(async () => {
         setLoading(true);
@@ -61,7 +66,14 @@ function Play() {
 
             newSocket.addEventListener('message', (event) => {
                 console.log('Message from server:', event.data);
-                // Handle Message
+                const data = JSON.parse(event.data)
+
+                if (data.status === 'gameStart') {
+                    setMatchStatus(data.status);
+                    setPlayerColor(data.playerColor);
+                    setOpponentUserName(data.opponentUserName);
+                    setConnectionId(data.connectionId);
+                }
             });
 
             newSocket.addEventListener('close', () => {
@@ -89,14 +101,22 @@ function Play() {
     return (
         <>
             {!matchType && <MatchOptions handleChangeMatchType={handleChangeMatchType} />}
-            {matchType === 'friendly' && !matchStarted && <MatchMakingModal friendlyMatchCode={friendlyMatchCode} getMatchId={getMatchId} setFriendlyMatchCode={setFriendlyMatchCode} />}
-            {matchStarted &&
+            {matchType === 'friendly' && matchStatus !== 'gameStart' && <MatchMakingModal friendlyMatchCode={friendlyMatchCode} getMatchId={getMatchId} setFriendlyMatchCode={setFriendlyMatchCode} />}
+            {matchStatus === 'gameStart' &&
                 (<div className="relative flex flex-col items-center mx-auto">
                     <div className="flex flex-col mx-auto mt-4 w-fit xl:flex-row">
                         <div>
-                            <PlayerCard color={"B"} />
-                            <Board />
-                            <PlayerCard />
+                            <PlayerCard
+                                color={playerColor === 'white' ? 'black' : 'white'}
+                                userName={opponentUserName}
+                                player={'opponent'}
+                            />
+                            <Board color={playerColor} />
+                            <PlayerCard
+                                color={playerColor}
+                                userName={playerUserName}
+                                player={'user'}
+                            />
                         </div>
                         <MoveHistory />
                     </div>

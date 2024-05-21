@@ -81,7 +81,7 @@ function MatchMakingModal({ friendlyMatchCode, getMatchId, setFriendlyMatchCode 
                     <h2 className="mt-4 text-center">Send this match code to your friend.</h2>
                     <textarea
                         ref={matchCodeRef} // Ref for the textarea
-                        className="w-5/6 m-4 mb-1 text-center bg-gray-100 border rounded-md cursor-not-allowed border-neutral-600"
+                        className="w-5/6 m-4 mb-1 text-center bg-gray-100 border rounded-md border-neutral-600"
                         value={friendlyMatchCode}
                         disabled
                     />

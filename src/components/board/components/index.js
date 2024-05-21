@@ -2,6 +2,7 @@ import Piece from "../../piece";
 
 const Cell = ({
     cellId,
+    playerColor,
     pieceId,
     clickMovePiece,
     isSelected,
@@ -15,10 +16,17 @@ const Cell = ({
             id={cellId}
             onClick={clickMovePiece}
         >
-            {cellId.split('')[1] === '1'
+            {cellId.split('')[1] === '1' && playerColor === 'white'
                 ? <span className="absolute text-[10px] -bottom-4 sm:text-base sm:-bottom-6 text-gray-300 font-semibold">{cellId.split('')[0]}</span>
                 : ""}
-            {cellId.split('')[0] === 'A'
+            {cellId.split('')[0] === 'A' && playerColor === 'white'
+                ? <span className="absolute text-[10px] -left-2 sm:text-base sm:-left-4 text-gray-300 font-semibold">{cellId.split('')[1]}</span>
+                : ""}
+
+            {cellId.split('')[1] === '8' && playerColor === 'black'
+                ? <span className="absolute text-[10px] -bottom-4 sm:text-base sm:-bottom-6 text-gray-300 font-semibold">{cellId.split('')[0]}</span>
+                : ""}
+            {cellId.split('')[0] === 'I' && playerColor === 'black'
                 ? <span className="absolute text-[10px] -left-2 sm:text-base sm:-left-4 text-gray-300 font-semibold">{cellId.split('')[1]}</span>
                 : ""}
             {pieceId ? <Piece pieceId={pieceId} /> : null}
