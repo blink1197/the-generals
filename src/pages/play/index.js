@@ -7,6 +7,11 @@ import MatchMakingModal from "../../components/matchMakingModal";
 import AxiosService from "../../service/axiosService";
 import { v4 as uuidv4 } from 'uuid';
 
+import {
+    INITIAL_BOARD_STATE_WHITE,
+    INITIAL_BOARD_STATE_BLACK
+} from "../../components/board/const";
+
 function Play() {
     const [matchType, setMatchType] = useState(null);
     const [friendlyMatchCode, setFriendlyMatchCode] = useState('');
@@ -16,17 +21,20 @@ function Play() {
     const [socket, setSocket] = useState(null);
     const [isSocketConnected, setIsSocketConnected] = useState(false);
     const [opponentUserName, setOpponentUserName] = useState("");
-    const [matchStatus, setMatchStatus] = useState("not yet started");
+    const [matchStatus, setMatchStatus] = useState("notYetStarted");
     const [playerColor, setPlayerColor] = useState("white");
     const [connectionId, setConnectionId] = useState("");
     const [playerUserName, setPlayerUserName] = useState("User-Player");
-
+    const [boardState, setBoardState] = useState({});
+    const [turnNumber, setTurnNumber] = useState(0);
+    const [isPlayerTurn, setIsPlayerTurn] = useState(false);
+    const [isInitialBoardSubmitted, setIsInitialBoardSubmitted] = useState(false);
 
     const getMatchId = useCallback(async () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await AxiosService.postData('/create-match', { userId: userId });
+            const response = await AxiosService.postData('/create-match', { userId });
             setFriendlyMatchCode(response.matchId);
         } catch (error) {
             setError(error);
@@ -45,12 +53,21 @@ function Play() {
 
     const handleUserAction = (action, data) => {
         const message = {
-            action: action,
+            action,
             matchId: friendlyMatchCode,
             playerId: userId,
-            data: data
+            data
         };
         sendMessage(message);
+    }
+
+    const handleChangeMatchType = (event) => {
+        setMatchType(event.currentTarget.name);
+    }
+
+    const submitInitialBoardState = () => {
+        handleUserAction('initializeBoard', boardState);
+        setIsInitialBoardSubmitted(true);
     }
 
     useEffect(() => {
@@ -61,18 +78,32 @@ function Play() {
             newSocket.addEventListener('open', () => {
                 console.log('Connected to WebSocket server');
                 setIsSocketConnected(true);
-                handleUserAction('joinMatch', null); // Call handleUserAction after connection
             });
 
             newSocket.addEventListener('message', (event) => {
                 console.log('Message from server:', event.data);
-                const data = JSON.parse(event.data)
+                try {
+                    const data = JSON.parse(event.data);
+                    if (data.status === 'gameStart') {
+                        setMatchStatus(data.status);
+                        setPlayerColor(data.playerColor);
+                        setOpponentUserName(data.opponentUserName);
+                        setConnectionId(data.connectionId);
 
-                if (data.status === 'gameStart') {
-                    setMatchStatus(data.status);
-                    setPlayerColor(data.playerColor);
-                    setOpponentUserName(data.opponentUserName);
-                    setConnectionId(data.connectionId);
+                        const initialBoardState = data.playerColor === 'white'
+                            ? INITIAL_BOARD_STATE_WHITE
+                            : INITIAL_BOARD_STATE_BLACK;
+                        setBoardState(initialBoardState);
+                    }
+
+                    if (data.status === 'gameProper') {
+                        setMatchStatus(data.status);
+                        setTurnNumber(data.turnNumber);
+                        setIsPlayerTurn(data.isPlayerTurn);
+                        setBoardState(data.boardState);
+                    }
+                } catch (error) {
+                    console.error('Error parsing WebSocket message:', error);
                 }
             });
 
@@ -88,21 +119,27 @@ function Play() {
     }, [friendlyMatchCode]);
 
     useEffect(() => {
-        if (isSocketConnected) {
+        if (isSocketConnected && friendlyMatchCode) {
             console.log('WebSocket is connected, joining match');
-            handleUserAction('joinMatch', { matchId: friendlyMatchCode }); // Call handleUserAction after connection is confirmed
+            handleUserAction('joinMatch', { matchId: friendlyMatchCode });
         }
-    }, [isSocketConnected]);
-
-    const handleChangeMatchType = (event) => {
-        setMatchType(event.currentTarget.name);
-    }
+    }, [isSocketConnected, friendlyMatchCode]);
 
     return (
         <>
-            {!matchType && <MatchOptions handleChangeMatchType={handleChangeMatchType} />}
-            {matchType === 'friendly' && matchStatus !== 'gameStart' && <MatchMakingModal friendlyMatchCode={friendlyMatchCode} getMatchId={getMatchId} setFriendlyMatchCode={setFriendlyMatchCode} />}
-            {matchStatus === 'gameStart' &&
+            {!matchType &&
+                <MatchOptions handleChangeMatchType={handleChangeMatchType} />
+            }
+
+            {(matchType === 'friendly' && matchStatus !== 'gameStart' && matchStatus !== 'gameProper') &&
+                <MatchMakingModal
+                    friendlyMatchCode={friendlyMatchCode}
+                    getMatchId={getMatchId}
+                    setFriendlyMatchCode={setFriendlyMatchCode}
+                />
+            }
+
+            {(matchStatus === 'gameStart' || matchStatus === 'gameProper') &&
                 (<div className="relative flex flex-col items-center mx-auto">
                     <div className="flex flex-col mx-auto mt-4 w-fit xl:flex-row">
                         <div>
@@ -110,17 +147,31 @@ function Play() {
                                 color={playerColor === 'white' ? 'black' : 'white'}
                                 userName={opponentUserName}
                                 player={'opponent'}
+                                matchStatus={matchStatus}
+                                isPlayerTurn={!isPlayerTurn}
                             />
-                            <Board color={playerColor} />
+                            <Board
+                                color={playerColor}
+                                matchStatus={matchStatus}
+                                boardState={boardState}
+                                setBoardState={setBoardState}
+                                isInitialBoardSubmitted={isInitialBoardSubmitted}
+                                isPlayerTurn={isPlayerTurn}
+                            />
                             <PlayerCard
                                 color={playerColor}
                                 userName={playerUserName}
                                 player={'user'}
+                                matchStatus={matchStatus}
+                                submitInitialBoardState={submitInitialBoardState}
+                                isInitialBoardSubmitted={isInitialBoardSubmitted}
+                                isPlayerTurn={isPlayerTurn}
                             />
                         </div>
                         <MoveHistory />
                     </div>
-                </div>)}
+                </div>)
+            }
         </>
     );
 }

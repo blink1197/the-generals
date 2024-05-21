@@ -4,7 +4,7 @@ const Cell = ({
     cellId,
     playerColor,
     pieceId,
-    clickMovePiece,
+    movePiece,
     isSelected,
     isValidCellToMove
 }) => {
@@ -14,7 +14,7 @@ const Cell = ({
             className={`relative flex items-center justify-center bg-gray-200 w-10 h-10 min-w-10 min-h-10 sm:w-16 sm:h-16 md:w-[4.5rem] md:h-[4.5rem] lg:w-20 lg:h-20 ${isSelected ? 'bg-slate-300' : ''} ${isValidCellToMove ? 'bg-green-200' : ''}`}
             key={cellId}
             id={cellId}
-            onClick={clickMovePiece}
+            onClick={movePiece}
         >
             {cellId.split('')[1] === '1' && playerColor === 'white'
                 ? <span className="absolute text-[10px] -bottom-4 sm:text-base sm:-bottom-6 text-gray-300 font-semibold">{cellId.split('')[0]}</span>

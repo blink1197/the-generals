@@ -1,18 +1,22 @@
 import { useState } from "react";
 import Cell from "./components";
-import { INITIAL_BOARD_STATE_WHITE, INITIAL_BOARD_STATE_BLACK } from "./const";
+import InitializeBoardModal from "../initializeBoardModal";
 
 const COLUMNS = 'ABCDEFGHI';
 const NUM_COLS = COLUMNS.length;
 const ROWS = '87654321';
 const NUM_ROWS = ROWS.length;
 
-function Board({ color }) {
+function Board({
+    color,
+    matchStatus,
+    boardState,
+    setBoardState,
+    isInitialBoardSubmitted,
+    isPlayerTurn
+}) {
     const columnLetters = color === 'white' ? COLUMNS : COLUMNS.split('').reverse().join('');
     const rowNumbers = color === 'white' ? ROWS : ROWS.split('').reverse().join('');
-
-    const initialBoardState = color === 'white' ? INITIAL_BOARD_STATE_WHITE : INITIAL_BOARD_STATE_BLACK;
-    const [boardState, setBoardState] = useState(initialBoardState);
     const [selectedCell, setSelectedCell] = useState("");
     const [adjacentCells, setAdjacentCells] = useState([]);
     const [validCellsToMove, setValidCellsToMove] = useState([]);
@@ -43,6 +47,15 @@ function Board({ color }) {
             .filter(Boolean);
     };
 
+    const isValidArrangeCell = (cell) => {
+        const row = cell.charAt(1);
+        if (color === 'white') {
+            return ['1', '2', '3'].includes(row);
+        } else {
+            return ['6', '7', '8'].includes(row);
+        }
+    };
+
     const clickMovePiece = (event) => {
         const { id } = event.currentTarget;
         if (selectedCell) {
@@ -66,6 +79,39 @@ function Board({ color }) {
         }
     };
 
+    const arrangePieces = (event) => {
+        const { id } = event.currentTarget;
+        if (selectedCell) {
+            const selectedPiece = boardState[selectedCell];
+            const targetPiece = boardState[id];
+
+            // Check if both cells are in the valid rows for arranging pieces
+            if (isValidArrangeCell(selectedCell) && isValidArrangeCell(id)) {
+                const updatedBoardState = { ...boardState };
+                if (selectedPiece) {
+                    updatedBoardState[selectedCell] = targetPiece;  // Move target piece to selected cell
+                    updatedBoardState[id] = selectedPiece;  // Move selected piece to target cell
+                }
+                setBoardState(updatedBoardState);
+            }
+            setSelectedCell("");
+            setValidCellsToMove([]);
+        } else {
+            if (isValidArrangeCell(id)) {
+                setSelectedCell(id);
+                setValidCellsToMove(Object.keys(boardState));  // All cells are valid moves for arrangePieces
+            }
+        }
+    };
+
+    const handleCellClick = (event) => {
+        if (matchStatus === 'gameStart') {
+            arrangePieces(event);
+        } else {
+            clickMovePiece(event);
+        }
+    };
+
     const generateCellId = (row, col) => `${columnLetters[col]}${rowNumbers[row]}`;
 
     const cells = Array.from({ length: NUM_ROWS * NUM_COLS }, (_, index) => {
@@ -76,16 +122,19 @@ function Board({ color }) {
 
     return (
         <div className="flex items-center justify-center mx-auto my-8 bg-white">
-            <div className="grid grid-cols-9 sm:gap-0.5 gap-[1px] md:gap-1">
+            <div className="relative grid grid-cols-9 sm:gap-0.5 gap-[1px] md:gap-1">
+                {(!matchStatus === 'gameProper' || matchStatus === 'gameStart') && <InitializeBoardModal isInitialBoardSubmitted={isInitialBoardSubmitted} />}
                 {cells.map((cell) => (
                     <Cell
                         key={cell}
                         playerColor={color}
                         cellId={cell}
                         pieceId={boardState[cell]}
-                        clickMovePiece={clickMovePiece}
+                        movePiece={matchStatus === 'gameStart'
+                            ? arrangePieces
+                            : clickMovePiece}
                         isSelected={cell === selectedCell}
-                        isValidCellToMove={validCellsToMove.includes(cell) && boardState[selectedCell]}
+                        isValidCellToMove={validCellsToMove.includes(cell) && boardState[selectedCell] && matchStatus !== 'gameStart'}
                     />
                 ))}
             </div>

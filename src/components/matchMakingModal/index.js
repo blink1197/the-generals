@@ -79,11 +79,12 @@ function MatchMakingModal({ friendlyMatchCode, getMatchId, setFriendlyMatchCode 
             {lobbyMode === 'create' && (
                 <div className="flex flex-col items-center w-full">
                     <h2 className="mt-4 text-center">Send this match code to your friend.</h2>
-                    <textarea
+                    <input
                         ref={matchCodeRef} // Ref for the textarea
-                        className="w-5/6 m-4 mb-1 text-center bg-gray-100 border rounded-md border-neutral-600"
+                        className="flex items-center w-5/6 h-12 m-4 mb-1 text-lg text-center bg-gray-100 border rounded-md border-neutral-600"
                         value={friendlyMatchCode}
                         disabled
+
                     />
                     <div className={`transition-opacity duration-500 ${copySuccess ? 'opacity-100' : 'opacity-0'} text-green-600 mb-1 text-xs`}>
                         Match code copied to clipboard!
@@ -98,8 +99,8 @@ function MatchMakingModal({ friendlyMatchCode, getMatchId, setFriendlyMatchCode 
             {lobbyMode === 'join' && (
                 <div className="flex flex-col items-center w-full">
                     <h2 className="mt-2 text-center">Type the match code and click Join.</h2>
-                    <textarea type="text" ref={matchCodeRef} // Ref for the textarea
-                        className="w-5/6 m-4 bg-gray-100 border rounded-md border-neutral-600"
+                    <input type="text" ref={matchCodeRef} // Ref for the textarea
+                        className="flex items-center w-5/6 h-12 m-4 text-lg text-center bg-gray-100 border rounded-md border-neutral-600"
                     />
                     <Button name="joinMatch" text="Join" onClick={handleJoinMatch} />
                 </div>
