@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Cell from "./components";
 import InitializeBoardModal from "../initializeBoardModal";
+import BoardHelper from "../../utils/BoardHelper";
 
 const COLUMNS = 'ABCDEFGHI';
 const NUM_COLS = COLUMNS.length;
@@ -8,18 +9,22 @@ const ROWS = '87654321';
 const NUM_ROWS = ROWS.length;
 
 function Board({
-    color,
+    playerColor,
     matchStatus,
     boardState,
     setBoardState,
     isInitialBoardSubmitted,
-    isPlayerTurn
+    isPlayerTurn,
+    setIsPlayerTurn,
+    submitMove
 }) {
-    const columnLetters = color === 'white' ? COLUMNS : COLUMNS.split('').reverse().join('');
-    const rowNumbers = color === 'white' ? ROWS : ROWS.split('').reverse().join('');
+    const columnLetters = playerColor === 'white' ? COLUMNS : COLUMNS.split('').reverse().join('');
+    const rowNumbers = playerColor === 'white' ? ROWS : ROWS.split('').reverse().join('');
     const [selectedCell, setSelectedCell] = useState("");
     const [adjacentCells, setAdjacentCells] = useState([]);
+    const [playerMove, setPlayerMove] = useState({});
     const [validCellsToMove, setValidCellsToMove] = useState([]);
+    const boardHelper = new BoardHelper(playerColor);
 
     const getAdjacentCells = (cell) => {
         const columns = columnLetters.split('');
@@ -47,35 +52,47 @@ function Board({
             .filter(Boolean);
     };
 
-    const isValidArrangeCell = (cell) => {
-        const row = cell.charAt(1);
-        if (color === 'white') {
-            return ['1', '2', '3'].includes(row);
-        } else {
-            return ['6', '7', '8'].includes(row);
-        }
-    };
-
     const clickMovePiece = (event) => {
         const { id } = event.currentTarget;
-        if (selectedCell) {
+        if (isPlayerTurn) {
             const selectedPiece = boardState[selectedCell];
             const isDestinationAdjacent = adjacentCells.includes(id);
-
-            if (isDestinationAdjacent && !boardState[id] && selectedPiece) {
-                const updatedBoardState = { ...boardState };
-                updatedBoardState[id] = selectedPiece;
-                updatedBoardState[selectedCell] = null;
-                setBoardState(updatedBoardState);
+            const opponentColorCode = playerColor === 'white' ? 'B' : 'W';
+            if (selectedCell) {
+                if (isDestinationAdjacent && !boardState[id] && selectedPiece !== opponentColorCode) {
+                    const updatedBoardState = { ...boardState };
+                    updatedBoardState[id] = selectedPiece;
+                    updatedBoardState[selectedCell] = null;
+                    setBoardState(updatedBoardState);
+                }
+                setSelectedCell("");
+                setValidCellsToMove([]);
+                setPlayerMove((prevState) => (
+                    {
+                        ...prevState,
+                        pieceId: selectedPiece,
+                        from: selectedCell,
+                        to: id
+                    }
+                ))
+                submitMove({
+                    pieceId: selectedPiece,
+                    from: selectedCell,
+                    to: id,
+                    type: boardHelper.getMoveType(boardState[id])
+                });
+            } else {
+                if (selectedPiece !== opponentColorCode) {
+                    const adjacent = getAdjacentCells(id);
+                    const validMoves = adjacent.filter(cell => !boardState[cell]);
+                    const pieceColor = boardHelper.getPieceColor(boardState[id]);
+                    if (pieceColor === playerColor) {
+                        setSelectedCell(id);
+                        setValidCellsToMove(validMoves);
+                        setAdjacentCells(adjacent);
+                    }
+                }
             }
-            setSelectedCell("");
-            setValidCellsToMove([]);
-        } else {
-            setSelectedCell(id);
-            const adjacent = getAdjacentCells(id);
-            setAdjacentCells(adjacent);
-            const validMoves = adjacent.filter(cell => !boardState[cell]);
-            setValidCellsToMove(validMoves);
         }
     };
 
@@ -84,31 +101,21 @@ function Board({
         if (selectedCell) {
             const selectedPiece = boardState[selectedCell];
             const targetPiece = boardState[id];
-
-            // Check if both cells are in the valid rows for arranging pieces
-            if (isValidArrangeCell(selectedCell) && isValidArrangeCell(id)) {
+            if (boardHelper.isValidArrangeCell(selectedCell) && boardHelper.isValidArrangeCell(id)) {
                 const updatedBoardState = { ...boardState };
                 if (selectedPiece) {
-                    updatedBoardState[selectedCell] = targetPiece;  // Move target piece to selected cell
-                    updatedBoardState[id] = selectedPiece;  // Move selected piece to target cell
+                    updatedBoardState[selectedCell] = targetPiece;
+                    updatedBoardState[id] = selectedPiece;
                 }
                 setBoardState(updatedBoardState);
             }
             setSelectedCell("");
             setValidCellsToMove([]);
         } else {
-            if (isValidArrangeCell(id)) {
+            if (boardHelper.isValidArrangeCell(id)) {
                 setSelectedCell(id);
-                setValidCellsToMove(Object.keys(boardState));  // All cells are valid moves for arrangePieces
+                setValidCellsToMove(Object.keys(boardState));
             }
-        }
-    };
-
-    const handleCellClick = (event) => {
-        if (matchStatus === 'gameStart') {
-            arrangePieces(event);
-        } else {
-            clickMovePiece(event);
         }
     };
 
@@ -127,7 +134,7 @@ function Board({
                 {cells.map((cell) => (
                     <Cell
                         key={cell}
-                        playerColor={color}
+                        playerColor={playerColor}
                         cellId={cell}
                         pieceId={boardState[cell]}
                         movePiece={matchStatus === 'gameStart'

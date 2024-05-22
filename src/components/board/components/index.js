@@ -6,8 +6,10 @@ const Cell = ({
     pieceId,
     movePiece,
     isSelected,
-    isValidCellToMove
+    isValidCellToMove,
 }) => {
+
+    const [coloumnNumber, rowNumber] = cellId.split('');
 
     return (
         <div
@@ -16,18 +18,18 @@ const Cell = ({
             id={cellId}
             onClick={movePiece}
         >
-            {cellId.split('')[1] === '1' && playerColor === 'white'
-                ? <span className="absolute text-[10px] -bottom-4 sm:text-base sm:-bottom-6 text-gray-300 font-semibold">{cellId.split('')[0]}</span>
+            {rowNumber === '1' && playerColor === 'white'
+                ? <span className="absolute text-[10px] -bottom-4 sm:text-base sm:-bottom-6 text-gray-300 font-semibold">{coloumnNumber}</span>
                 : ""}
-            {cellId.split('')[0] === 'A' && playerColor === 'white'
-                ? <span className="absolute text-[10px] -left-2 sm:text-base sm:-left-4 text-gray-300 font-semibold">{cellId.split('')[1]}</span>
+            {coloumnNumber === 'A' && playerColor === 'white'
+                ? <span className="absolute text-[10px] -left-2 sm:text-base sm:-left-4 text-gray-300 font-semibold">{rowNumber}</span>
                 : ""}
 
-            {cellId.split('')[1] === '8' && playerColor === 'black'
-                ? <span className="absolute text-[10px] -bottom-4 sm:text-base sm:-bottom-6 text-gray-300 font-semibold">{cellId.split('')[0]}</span>
+            {rowNumber === '8' && playerColor === 'black'
+                ? <span className="absolute text-[10px] -bottom-4 sm:text-base sm:-bottom-6 text-gray-300 font-semibold">{coloumnNumber}</span>
                 : ""}
-            {cellId.split('')[0] === 'I' && playerColor === 'black'
-                ? <span className="absolute text-[10px] -left-2 sm:text-base sm:-left-4 text-gray-300 font-semibold">{cellId.split('')[1]}</span>
+            {coloumnNumber === 'I' && playerColor === 'black'
+                ? <span className="absolute text-[10px] -left-2 sm:text-base sm:-left-4 text-gray-300 font-semibold">{rowNumber}</span>
                 : ""}
             {pieceId ? <Piece pieceId={pieceId} /> : null}
         </div>
