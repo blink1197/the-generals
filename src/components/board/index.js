@@ -75,12 +75,16 @@ function Board({
                         to: id
                     }
                 ))
-                submitMove({
-                    pieceId: selectedPiece,
-                    from: selectedCell,
-                    to: id,
-                    type: boardHelper.getMoveType(boardState[id])
-                });
+                const moveType = boardHelper.getMoveType(boardState[id]);
+                if (moveType) {
+                    submitMove({
+                        pieceId: selectedPiece,
+                        from: selectedCell,
+                        to: id,
+                        type: moveType
+                    });
+                }
+
             } else {
                 if (selectedPiece !== opponentColorCode) {
                     const adjacent = getAdjacentCells(id);

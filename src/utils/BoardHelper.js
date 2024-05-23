@@ -21,6 +21,8 @@ class BoardHelper {
         } else {
             if (this.playerColor !== this.getPieceColor(pieceId)) {
                 return 'capture'
+            } else {
+                return undefined
             }
         }
     }

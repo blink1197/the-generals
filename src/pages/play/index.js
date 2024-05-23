@@ -31,6 +31,7 @@ function Play() {
     const [turnNumber, setTurnNumber] = useState(0);
     const [isPlayerTurn, setIsPlayerTurn] = useState(false);
     const [isInitialBoardSubmitted, setIsInitialBoardSubmitted] = useState(false);
+    const [playerMoves, setPlayerMoves] = useState([]);
 
     const getMatchId = useCallback(async () => {
         setLoading(true);
@@ -95,7 +96,7 @@ function Play() {
             });
 
             newSocket.addEventListener('message', (event) => {
-                console.log('Message from server:', event.data);
+                //console.log('Message from server:', event.data);
                 try {
                     const data = JSON.parse(event.data);
                     if (data.status === 'gameStart') {
@@ -111,10 +112,12 @@ function Play() {
                     }
 
                     if (data.status === 'gameProper') {
+
                         setMatchStatus(data.status);
                         setTurnNumber(data.turnNumber);
                         setIsPlayerTurn(data.isPlayerTurn);
                         setBoardState(data.boardState);
+                        setPlayerMoves(prevMoves => [...prevMoves, data.move]);
                     }
                 } catch (error) {
                     console.error('Error parsing WebSocket message:', error);
@@ -139,6 +142,7 @@ function Play() {
         }
     }, [isSocketConnected, friendlyMatchCode]);
 
+    console.log(playerMoves);
     return (
         <>
             {!matchType &&
@@ -186,7 +190,7 @@ function Play() {
                                 isPlayerTurn={isPlayerTurn}
                             />
                         </div>
-                        <MoveHistory />
+                        <MoveHistory playerMoves={playerMoves} matchStatus={matchStatus} />
                     </div>
                 </div>)
             }
