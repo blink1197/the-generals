@@ -12,6 +12,7 @@ import {
     INITIAL_BOARD_STATE_BLACK
 } from "../../components/board/const";
 
+
 function Play() {
     const [matchType, setMatchType] = useState(null);
     const [friendlyMatchCode, setFriendlyMatchCode] = useState('');
@@ -26,9 +27,11 @@ function Play() {
     const [connectionId, setConnectionId] = useState("");
     const [playerUserName, setPlayerUserName] = useState("User-Player");
     const [boardState, setBoardState] = useState({});
+    const [playerMove, setPlayerMove] = useState({});
     const [turnNumber, setTurnNumber] = useState(0);
     const [isPlayerTurn, setIsPlayerTurn] = useState(false);
     const [isInitialBoardSubmitted, setIsInitialBoardSubmitted] = useState(false);
+    const [playerMoves, setPlayerMoves] = useState([]);
 
     const getMatchId = useCallback(async () => {
         setLoading(true);
@@ -70,9 +73,21 @@ function Play() {
         setIsInitialBoardSubmitted(true);
     }
 
+    const submitMove = (move) => {
+        const data = {
+            boardState: boardState,
+            move: { ...move, turnNumber: turnNumber }
+        }
+        handleUserAction('makeMove', data);
+        setIsPlayerTurn(false);
+    }
+
     useEffect(() => {
         if (friendlyMatchCode) {
-            const newSocket = new WebSocket(`ws://${process.env.REACT_APP_API_WS_URL}`);
+            const websocketsUrl = window.location.hostname === 'localhost'
+                ? process.env.REACT_APP_API_WS_URL_LOCAL
+                : process.env.REACT_APP_API_WS_URL_NETWORK
+            const newSocket = new WebSocket(`ws://${websocketsUrl}`);
             setSocket(newSocket);
 
             newSocket.addEventListener('open', () => {
@@ -81,7 +96,7 @@ function Play() {
             });
 
             newSocket.addEventListener('message', (event) => {
-                console.log('Message from server:', event.data);
+                //console.log('Message from server:', event.data);
                 try {
                     const data = JSON.parse(event.data);
                     if (data.status === 'gameStart') {
@@ -97,10 +112,12 @@ function Play() {
                     }
 
                     if (data.status === 'gameProper') {
+
                         setMatchStatus(data.status);
                         setTurnNumber(data.turnNumber);
                         setIsPlayerTurn(data.isPlayerTurn);
                         setBoardState(data.boardState);
+                        setPlayerMoves(prevMoves => [...prevMoves, data.move]);
                     }
                 } catch (error) {
                     console.error('Error parsing WebSocket message:', error);
@@ -125,6 +142,7 @@ function Play() {
         }
     }, [isSocketConnected, friendlyMatchCode]);
 
+    console.log(playerMoves);
     return (
         <>
             {!matchType &&
@@ -156,19 +174,23 @@ function Play() {
                                 boardState={boardState}
                                 setBoardState={setBoardState}
                                 isInitialBoardSubmitted={isInitialBoardSubmitted}
+                                setIsPlayerTurn={setIsPlayerTurn}
                                 isPlayerTurn={isPlayerTurn}
+                                playerColor={playerColor}
+                                submitMove={submitMove}
+
                             />
                             <PlayerCard
                                 color={playerColor}
                                 userName={playerUserName}
                                 player={'user'}
                                 matchStatus={matchStatus}
-                                submitInitialBoardState={submitInitialBoardState}
+                                submitInitialBoardState={() => submitInitialBoardState()}
                                 isInitialBoardSubmitted={isInitialBoardSubmitted}
                                 isPlayerTurn={isPlayerTurn}
                             />
                         </div>
-                        <MoveHistory />
+                        <MoveHistory playerMoves={playerMoves} matchStatus={matchStatus} />
                     </div>
                 </div>)
             }

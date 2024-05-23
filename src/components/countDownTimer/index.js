@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
-const CountdownTimer = ({ startingTime, pauseTimer }) => {
+const CountdownTimer = ({
+    startingTime,
+    pauseTimer,
+    submitInitialBoardState
+}) => {
     const [timeRemaining, setTimeRemaining] = useState(startingTime * 60);
     const [isPaused, setIsPaused] = useState(false);
 
@@ -14,11 +18,14 @@ const CountdownTimer = ({ startingTime, pauseTimer }) => {
             timer = setTimeout(() => {
                 setTimeRemaining(prevTime => prevTime - 1);
             }, 1000);
+        } else if (timeRemaining === 0) {
+            console.log('here')
+            submitInitialBoardState();
         }
         return () => {
             clearTimeout(timer);
         };
-    }, [isPaused, timeRemaining]);
+    }, [isPaused, timeRemaining, submitInitialBoardState]);
 
     const formatTime = (time) => {
         const minutes = Math.floor(time / 60);

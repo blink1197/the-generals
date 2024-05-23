@@ -41,7 +41,7 @@ const PlayerCard = ({
                 </div>
             </div>
             <div className={`flex items-center justify-center m-2 ml-0 ${color === 'black' ? 'bg-zinc-600' : 'bg-zinc-300'} rounded-md`}>
-                {(matchStatus === 'gameStart' && player === 'user' && !isInitialBoardSubmitted) && <CountdownTimer startingTime={3} />}
+                {(matchStatus === 'gameStart' && player === 'user' && !isInitialBoardSubmitted) && <CountdownTimer startingTime={0.2} submitInitialBoardState={submitInitialBoardState} />}
                 {matchStatus === 'gameProper' && <CountdownTimer startingTime={10} pauseTimer={!isPlayerTurn} />}
             </div>
         </div>
