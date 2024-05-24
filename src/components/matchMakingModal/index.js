@@ -1,7 +1,8 @@
 import Button from "../formInputs/button";
+import MatchMaking from "../../utils/MatchMaking";
 import { useState, useRef } from "react";
 
-function MatchMakingModal({ friendlyMatchCode, getMatchId, setFriendlyMatchCode }) {
+function MatchMakingModal({ friendlyMatchCode, getMatchId, setFriendlyMatchCode, setMatchId }) {
     const [lobbyMode, setLobbyMode] = useState(null);
     const [copySuccess, setCopySuccess] = useState(false);
     const matchCodeRef = useRef(null); // Ref for the textarea
@@ -47,6 +48,8 @@ function MatchMakingModal({ friendlyMatchCode, getMatchId, setFriendlyMatchCode 
 
     const handleJoinMatch = () => {
         setFriendlyMatchCode(matchCodeRef.current.value);
+        console.log(matchCodeRef.current.value);
+        setMatchId(`m#${MatchMaking.codeToUUID(matchCodeRef.current.value)}`)
     };
 
     return (

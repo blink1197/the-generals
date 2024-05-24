@@ -16,7 +16,9 @@ import {
 function Play() {
     const [matchType, setMatchType] = useState(null);
     const [friendlyMatchCode, setFriendlyMatchCode] = useState('');
-    const [userId] = useState(uuidv4());
+    const [matchId, setMatchId] = useState(null);
+    const userId = `p#${uuidv4()}`;
+    const userName = `user-${userId.slice(2, 5)}`;
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const [socket, setSocket] = useState(null);
@@ -37,8 +39,10 @@ function Play() {
         setLoading(true);
         setError(null);
         try {
-            const response = await AxiosService.postData('/create-match', { userId });
-            setFriendlyMatchCode(response.matchId);
+            const { message } = await AxiosService.postData('/create-match', { userId });
+            setFriendlyMatchCode(message.matchCode);
+            setMatchId(message.matchId);
+
         } catch (error) {
             setError(error);
         } finally {
@@ -57,8 +61,9 @@ function Play() {
     const handleUserAction = (action, data) => {
         const message = {
             action,
-            matchId: friendlyMatchCode,
+            matchId: matchId,
             playerId: userId,
+            userName: userName,
             data
         };
         sendMessage(message);
@@ -83,7 +88,7 @@ function Play() {
     }
 
     useEffect(() => {
-        if (friendlyMatchCode) {
+        if (matchId) {
             const websocketsUrl = window.location.hostname === 'localhost'
                 ? process.env.REACT_APP_API_WS_URL_LOCAL
                 : process.env.REACT_APP_API_WS_URL_NETWORK
@@ -105,6 +110,8 @@ function Play() {
                         setOpponentUserName(data.opponentUserName);
                         setConnectionId(data.connectionId);
 
+                        console.log(data);
+
                         const initialBoardState = data.playerColor === 'white'
                             ? INITIAL_BOARD_STATE_WHITE
                             : INITIAL_BOARD_STATE_BLACK;
@@ -118,6 +125,7 @@ function Play() {
                         setIsPlayerTurn(data.isPlayerTurn);
                         setBoardState(data.boardState);
                         setPlayerMoves(prevMoves => [...prevMoves, data.move]);
+                        console.log(data);
                     }
                 } catch (error) {
                     console.error('Error parsing WebSocket message:', error);
@@ -133,16 +141,17 @@ function Play() {
                 newSocket.close();
             };
         }
-    }, [friendlyMatchCode]);
+    }, [matchId]);
 
     useEffect(() => {
-        if (isSocketConnected && friendlyMatchCode) {
+        if (isSocketConnected && matchId) {
             console.log('WebSocket is connected, joining match');
-            handleUserAction('joinMatch', { matchId: friendlyMatchCode });
+            handleUserAction('joinMatch', { userName: userName });
         }
-    }, [isSocketConnected, friendlyMatchCode]);
+    }, [isSocketConnected, matchId]);
 
-    console.log(playerMoves);
+    //console.log(playerMoves);
+    //console.log(matchId);
     return (
         <>
             {!matchType &&
@@ -154,6 +163,7 @@ function Play() {
                     friendlyMatchCode={friendlyMatchCode}
                     getMatchId={getMatchId}
                     setFriendlyMatchCode={setFriendlyMatchCode}
+                    setMatchId={setMatchId}
                 />
             }
 
@@ -182,7 +192,7 @@ function Play() {
                             />
                             <PlayerCard
                                 color={playerColor}
-                                userName={playerUserName}
+                                userName={userName}
                                 player={'user'}
                                 matchStatus={matchStatus}
                                 submitInitialBoardState={() => submitInitialBoardState()}
