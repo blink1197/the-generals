@@ -3,11 +3,6 @@ import Cell from "./components";
 import InitializeBoardModal from "../initializeBoardModal";
 import BoardHelper from "../../utils/BoardHelper";
 
-const COLUMNS = 'ABCDEFGHI';
-const NUM_COLS = COLUMNS.length;
-const ROWS = '87654321';
-const NUM_ROWS = ROWS.length;
-
 function Board({
     playerColor,
     matchStatus,
@@ -15,54 +10,21 @@ function Board({
     setBoardState,
     isInitialBoardSubmitted,
     isPlayerTurn,
-    setIsPlayerTurn,
     submitMove
 }) {
-    const columnLetters = playerColor === 'white' ? COLUMNS : COLUMNS.split('').reverse().join('');
-    const rowNumbers = playerColor === 'white' ? ROWS : ROWS.split('').reverse().join('');
     const [selectedCell, setSelectedCell] = useState("");
-    const [adjacentCells, setAdjacentCells] = useState([]);
     const [playerMove, setPlayerMove] = useState({});
     const [validCellsToMove, setValidCellsToMove] = useState([]);
     const boardHelper = new BoardHelper(playerColor);
 
-    const getAdjacentCells = (cell) => {
-        const columns = columnLetters.split('');
-        const rows = rowNumbers.split('');
-        const column = cell.charAt(0);
-        const row = cell.charAt(1);
-        const columnIndex = columns.indexOf(column);
-        const rowIndex = rows.indexOf(row);
-        const directions = [
-            { dc: -1, dr: 0 },  // left
-            { dc: 1, dr: 0 },   // right
-            { dc: 0, dr: -1 },  // above
-            { dc: 0, dr: 1 }    // below
-        ];
-
-        return directions
-            .map(({ dc, dr }) => {
-                const newColumnIndex = columnIndex + dc;
-                const newRowIndex = rowIndex + dr;
-                if (newColumnIndex >= 0 && newColumnIndex < columns.length && newRowIndex >= 0 && newRowIndex < rows.length) {
-                    return columns[newColumnIndex] + rows[newRowIndex];
-                }
-                return null;
-            })
-            .filter(Boolean);
-    };
-
+    // Function for moving pieces around during gameProper
     const clickMovePiece = (event) => {
         const { id } = event.currentTarget;
         if (isPlayerTurn) {
             const selectedPiece = boardState[selectedCell];
             const opponentColorCode = boardHelper.getOpponentPieceCode();
             if (selectedCell) {
-                //const isDestinationAdjacent = adjacentCells.includes(id);
-                console.log('valid Moves', validCellsToMove)
-                console.log('selected cell', id)
                 const isMoveValid = validCellsToMove.includes(id);
-                console.log('isMoveValid', isMoveValid);
                 if (isMoveValid && (!boardState[id] || boardState[id] === opponentColorCode)) {
                     const updatedBoardState = { ...boardState };
                     updatedBoardState[id] = selectedPiece;
@@ -88,23 +50,21 @@ function Board({
                 }
                 setSelectedCell("");
                 setValidCellsToMove([]);
-                
-
             } else {
                 if (selectedPiece !== opponentColorCode) {
-                    const adjacent = getAdjacentCells(id);
+                    const adjacent = boardHelper.getAdjacentCells(id);
                     const validMoves = adjacent.filter(cell => (!boardState[cell] || boardState[cell] === boardHelper.getOpponentPieceCode()));
                     const pieceColor = boardHelper.getPieceColor(boardState[id]);
                     if (pieceColor === playerColor) {
                         setSelectedCell(id);
                         setValidCellsToMove(validMoves);
-                        setAdjacentCells(adjacent);
                     }
                 }
             }
         }
     };
 
+    //Function for moving pieces around during board init
     const arrangePieces = (event) => {
         const { id } = event.currentTarget;
         if (selectedCell) {
@@ -128,13 +88,7 @@ function Board({
         }
     };
 
-    const generateCellId = (row, col) => `${columnLetters[col]}${rowNumbers[row]}`;
-
-    const cells = Array.from({ length: NUM_ROWS * NUM_COLS }, (_, index) => {
-        const row = Math.floor(index / NUM_COLS);
-        const col = index % NUM_COLS;
-        return generateCellId(row, col);
-    });
+    const cells = boardHelper.generateCellsArray();
 
     return (
         <div className="flex items-center justify-center mx-auto mt-4 mb-6 bg-white">
