@@ -88,7 +88,7 @@ function Board({
             } else {
                 if (selectedPiece !== opponentColorCode) {
                     const adjacent = getAdjacentCells(id);
-                    const validMoves = adjacent.filter(cell => !boardState[cell]);
+                    const validMoves = adjacent.filter(cell => (!boardState[cell] || boardState[cell] === boardHelper.getOpponentPieceCode()));
                     const pieceColor = boardHelper.getPieceColor(boardState[id]);
                     if (pieceColor === playerColor) {
                         setSelectedCell(id);

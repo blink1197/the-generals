@@ -18,7 +18,7 @@ function Play() {
     const [friendlyMatchCode, setFriendlyMatchCode] = useState('');
     const [matchId, setMatchId] = useState(null);
     const userId = `p#${uuidv4()}`;
-    const userName = `user-${userId.slice(2, 5)}`;
+    const [userName, setUserName] = useState(`user-${userId.slice(2, 5)}`);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const [socket, setSocket] = useState(null);
@@ -39,7 +39,7 @@ function Play() {
         setLoading(true);
         setError(null);
         try {
-            const { message } = await AxiosService.postData('/create-match', { userId });
+            const { message } = await AxiosService.postData('/create-match', { userId, matchType: 'friendly' });
             setFriendlyMatchCode(message.matchCode);
             setMatchId(message.matchId);
 

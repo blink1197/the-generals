@@ -35,6 +35,24 @@ class BoardHelper {
             return ['6', '7', '8'].includes(row);
         }
     };
+
+    getOpponentCpolor() {
+        if (this.playerColor === 'white') {
+            return 'black';
+        } else {
+            return 'white';
+        }
+    }
+
+    getOpponentPieceCode() {
+        if (this.playerColor === 'white') {
+            return 'B';
+        } else {
+            return 'W';
+        }
+    }
+
+
 }
 
 export default BoardHelper;

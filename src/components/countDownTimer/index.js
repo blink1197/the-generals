@@ -51,7 +51,7 @@ const CountdownTimer = ({
 
     return (
         <div className='flex tracking-widest text-center'>
-            <span className={`w-[70px] m-3 text-2xl drop-shadow-sm font-bold ${timerStyle(timeRemaining)} ${(matchStatus === 'gameProper' && color === 'black' && isPlayerTurn) && 'text-zinc-800'}`}>{formatTime(timeRemaining)}</span>
+            <span className={`w-[70px] m-3 text-2xl drop-shadow-sm font-bold ${timerStyle(timeRemaining)} ${(matchStatus === 'gameProper' && isPlayerTurn) && 'text-white'}`}>{formatTime(timeRemaining)}</span>
         </div>
     );
 };
