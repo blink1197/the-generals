@@ -56,34 +56,39 @@ function Board({
         const { id } = event.currentTarget;
         if (isPlayerTurn) {
             const selectedPiece = boardState[selectedCell];
-            const isDestinationAdjacent = adjacentCells.includes(id);
-            const opponentColorCode = playerColor === 'white' ? 'B' : 'W';
+            const opponentColorCode = boardHelper.getOpponentPieceCode();
             if (selectedCell) {
-                if (isDestinationAdjacent && !boardState[id] && selectedPiece !== opponentColorCode) {
+                //const isDestinationAdjacent = adjacentCells.includes(id);
+                console.log('valid Moves', validCellsToMove)
+                console.log('selected cell', id)
+                const isMoveValid = validCellsToMove.includes(id);
+                console.log('isMoveValid', isMoveValid);
+                if (isMoveValid && (!boardState[id] || boardState[id] === opponentColorCode)) {
                     const updatedBoardState = { ...boardState };
                     updatedBoardState[id] = selectedPiece;
                     updatedBoardState[selectedCell] = null;
                     setBoardState(updatedBoardState);
+                    setPlayerMove((prevState) => (
+                        {
+                            ...prevState,
+                            pieceId: selectedPiece,
+                            from: selectedCell,
+                            to: id
+                        }
+                    ))
+                    const moveType = boardHelper.getMoveType(boardState[id]);
+                    if (moveType) {
+                        submitMove({
+                            pieceId: selectedPiece,
+                            from: selectedCell,
+                            to: id,
+                            type: moveType
+                        });
+                    }
                 }
                 setSelectedCell("");
                 setValidCellsToMove([]);
-                setPlayerMove((prevState) => (
-                    {
-                        ...prevState,
-                        pieceId: selectedPiece,
-                        from: selectedCell,
-                        to: id
-                    }
-                ))
-                const moveType = boardHelper.getMoveType(boardState[id]);
-                if (moveType) {
-                    submitMove({
-                        pieceId: selectedPiece,
-                        from: selectedCell,
-                        to: id,
-                        type: moveType
-                    });
-                }
+                
 
             } else {
                 if (selectedPiece !== opponentColorCode) {

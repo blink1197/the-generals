@@ -36,7 +36,7 @@ class BoardHelper {
         }
     };
 
-    getOpponentCpolor() {
+    getOpponentColor() {
         if (this.playerColor === 'white') {
             return 'black';
         } else {
