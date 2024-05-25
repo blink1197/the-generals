@@ -101,7 +101,6 @@ function Play() {
             });
 
             newSocket.addEventListener('message', (event) => {
-                //console.log('Message from server:', event.data);
                 try {
                     const data = JSON.parse(event.data);
                     if (data.status === 'gameStart') {
@@ -110,8 +109,6 @@ function Play() {
                         setOpponentUserName(data.opponentUserName);
                         setConnectionId(data.connectionId);
 
-                        console.log(data);
-
                         const initialBoardState = data.playerColor === 'white'
                             ? INITIAL_BOARD_STATE_WHITE
                             : INITIAL_BOARD_STATE_BLACK;
@@ -119,13 +116,11 @@ function Play() {
                     }
 
                     if (data.status === 'gameProper') {
-
                         setMatchStatus(data.status);
                         setTurnNumber(data.turnNumber);
                         setIsPlayerTurn(data.isPlayerTurn);
                         setBoardState(data.boardState);
                         setPlayerMoves(prevMoves => [...prevMoves, data.move]);
-                        console.log(data);
                     }
                 } catch (error) {
                     console.error('Error parsing WebSocket message:', error);
@@ -150,8 +145,6 @@ function Play() {
         }
     }, [isSocketConnected, matchId]);
 
-    //console.log(playerMoves);
-    //console.log(matchId);
     return (
         <>
             {!matchType &&

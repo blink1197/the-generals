@@ -20,9 +20,9 @@ const MoveHistory = ({ playerMoves, matchStatus }) => {
                 </thead>
                 <tbody className="w-full">
                     {(matchStatus === 'gameProper' && playerMoves.length > 1) &&
-                        playerMoves.slice(1).map((move, index) => (
+                        playerMoves.slice(1).reverse().map((move, index) => (
                             <tr key={index}>
-                                <td>{index + 1}</td>
+                                <td>{move.turnNumber}</td>
                                 <td>{move.pieceId}</td>
                                 <td>{move.from}</td>
                                 <td>{move.to}</td>
