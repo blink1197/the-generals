@@ -10,7 +10,7 @@ module.exports = {
       },
       backgroundImage: {
         'defaultDP': "url('https://the-generals.s3.ap-southeast-2.amazonaws.com/default-display-picture.png')",
-      }
+      },
     },
   },
   plugins: [],

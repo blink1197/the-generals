@@ -1,4 +1,5 @@
 import Piece from "../../piece";
+import Chevron from "../../chevron";
 
 const Cell = ({
     cellId,
@@ -9,7 +10,7 @@ const Cell = ({
     isValidCellToMove,
 }) => {
 
-    const [coloumnNumber, rowNumber] = cellId.split('');
+    const [columnNumber, rowNumber] = cellId.split('');
 
     return (
         <div
@@ -19,19 +20,21 @@ const Cell = ({
             onClick={movePiece}
         >
             {rowNumber === '1' && playerColor === 'white'
-                ? <span className="absolute text-[10px] -bottom-4 sm:text-base sm:-bottom-6 text-gray-300 font-semibold">{coloumnNumber}</span>
+                ? <span className="absolute text-[10px] -bottom-4 sm:text-base sm:-bottom-6 text-gray-300 font-semibold">{columnNumber}</span>
                 : ""}
-            {coloumnNumber === 'A' && playerColor === 'white'
+            {columnNumber === 'A' && playerColor === 'white'
                 ? <span className="absolute text-[10px] -left-2 sm:text-base sm:-left-4 text-gray-300 font-semibold">{rowNumber}</span>
                 : ""}
 
             {rowNumber === '8' && playerColor === 'black'
-                ? <span className="absolute text-[10px] -bottom-4 sm:text-base sm:-bottom-6 text-gray-300 font-semibold">{coloumnNumber}</span>
+                ? <span className="absolute text-[10px] -bottom-4 sm:text-base sm:-bottom-6 text-gray-300 font-semibold">{columnNumber}</span>
                 : ""}
-            {coloumnNumber === 'I' && playerColor === 'black'
+            {columnNumber === 'I' && playerColor === 'black'
                 ? <span className="absolute text-[10px] -left-2 sm:text-base sm:-left-4 text-gray-300 font-semibold">{rowNumber}</span>
                 : ""}
+
             {pieceId ? <Piece pieceId={pieceId} /> : null}
+            {/* <Chevron /> */}
         </div>
     );
 };

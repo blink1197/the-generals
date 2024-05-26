@@ -4,7 +4,6 @@ const PlayerCard = ({
     userName,
     rank,
     lostPieces,
-    remainingTime,
     color,
     player,
     matchStatus,
@@ -40,28 +39,17 @@ const PlayerCard = ({
             </div>
             <div className={`flex items-center justify-center m-2 ml-0 rounded-sm ${(isPlayerTurn && matchStatus === 'gameProper') ? 'bg-green-500' : color === 'black' ? 'bg-zinc-500' : 'bg-zinc-300'}`}>
 
-                {/* Timer during Board Initialization */}
-                {(matchStatus === 'gameStart' && player === 'user' && !isInitialBoardSubmitted) &&
+                {((matchStatus === 'gameStart' && player === 'user' && !isInitialBoardSubmitted) || matchStatus === 'gameProper') && (
                     <CountdownTimer
-                        startingTime={0.1}
-                        submitInitialBoardState={submitInitialBoardState}
+                        startingTime={matchStatus === 'gameStart' ? 3 : 10}
+                        submitInitialBoardState={matchStatus === 'gameStart' ? submitInitialBoardState : undefined}
+                        pauseTimer={matchStatus === 'gameProper' && !isPlayerTurn}
                         color={color}
                         matchStatus={matchStatus}
                         player={player}
                         isPlayerTurn={isPlayerTurn}
                     />
-                }
-                {/* Timer during Game Proper */}
-                {matchStatus === 'gameProper' &&
-                    <CountdownTimer
-                        startingTime={10}
-                        pauseTimer={!isPlayerTurn}
-                        color={color}
-                        matchStatus={matchStatus}
-                        player={player}
-                        isPlayerTurn={isPlayerTurn}
-                    />
-                }
+                )}
             </div>
         </div>
     );

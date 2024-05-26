@@ -18,7 +18,7 @@ function Play() {
     const [friendlyMatchCode, setFriendlyMatchCode] = useState('');
     const [matchId, setMatchId] = useState(null);
     const userId = `p#${uuidv4()}`;
-    const [userName, setUserName] = useState(`user-${userId.slice(2, 5)}`);
+    const [userName, setUserName] = useState(`user-${userId.slice(2, 5)}`); //Random user name during dev
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const [socket, setSocket] = useState(null);
@@ -27,9 +27,7 @@ function Play() {
     const [matchStatus, setMatchStatus] = useState("notYetStarted");
     const [playerColor, setPlayerColor] = useState("white");
     const [connectionId, setConnectionId] = useState("");
-    const [playerUserName, setPlayerUserName] = useState("User-Player");
     const [boardState, setBoardState] = useState({});
-    const [playerMove, setPlayerMove] = useState({});
     const [turnNumber, setTurnNumber] = useState(0);
     const [isPlayerTurn, setIsPlayerTurn] = useState(false);
     const [isInitialBoardSubmitted, setIsInitialBoardSubmitted] = useState(false);
@@ -177,7 +175,6 @@ function Play() {
                                 boardState={boardState}
                                 setBoardState={setBoardState}
                                 isInitialBoardSubmitted={isInitialBoardSubmitted}
-                                setIsPlayerTurn={setIsPlayerTurn}
                                 isPlayerTurn={isPlayerTurn}
                                 playerColor={playerColor}
                                 submitMove={submitMove}

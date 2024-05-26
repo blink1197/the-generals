@@ -19,9 +19,9 @@ const MoveHistory = ({ playerMoves, matchStatus }) => {
                     </tr>
                 </thead>
             </table>
-            <div className="w-full overflow-y-scroll max-h-32 ">
+            <div className="w-full overflow-y-scroll max-h-32 no-scrollbar">
                 <table className="w-full text-[12px] text-center table-auto">
-                    <tbody className="w-full overflow-y-scroll ">
+                    <tbody className="w-full">
                         {(matchStatus === 'gameProper' && playerMoves.length > 1) &&
                             playerMoves.slice(1).reverse().map((move, index) => (
                                 <tr key={index} className={`${index % 2 !== 0 ? 'bg-gray-100' : 'bg-white'}`}>
