@@ -178,6 +178,7 @@ function Play() {
                                 isPlayerTurn={isPlayerTurn}
                                 playerColor={playerColor}
                                 submitMove={submitMove}
+                                playerMoves={playerMoves}
 
                             />
                             <PlayerCard

@@ -10,7 +10,8 @@ function Board({
     setBoardState,
     isInitialBoardSubmitted,
     isPlayerTurn,
-    submitMove
+    submitMove,
+    playerMoves
 }) {
     const [selectedCell, setSelectedCell] = useState("");
     const [playerMove, setPlayerMove] = useState({});
@@ -100,11 +101,13 @@ function Board({
                         playerColor={playerColor}
                         cellId={cell}
                         pieceId={boardState[cell]}
+                        matchStatus={matchStatus}
                         movePiece={matchStatus === 'gameStart'
                             ? arrangePieces
                             : clickMovePiece}
                         isSelected={cell === selectedCell}
                         isValidCellToMove={validCellsToMove.includes(cell) && boardState[selectedCell] && matchStatus !== 'gameStart'}
+                        lastPlayerMove={playerMoves.slice(-1)[0]}
                     />
                 ))}
             </div>

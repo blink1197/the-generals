@@ -96,6 +96,39 @@ class BoardHelper {
             return 'W';
         }
     }
+
+    getLastMoveDirection(from, to) {
+        const columns = this.COLUMNS.split('');
+        const rows = this.ROWS.split('');
+
+        const [fromColumn, fromRow] = from.split('');
+        let toColumn, toRow;
+
+        if (to.length > 2) {
+            [, toColumn, toRow] = to.split('');
+        } else {
+            [toColumn, toRow] = to.split('');
+        }
+
+        const deltaX = columns.indexOf(fromColumn) - columns.indexOf(toColumn);
+        const deltaY = rows.indexOf(fromRow) - rows.indexOf(toRow);
+
+        const isWhite = this.playerColor === 'white';
+
+        if (deltaX > 0) {
+            return isWhite ? 'left' : 'right';
+        } else if (deltaX < 0) {
+            return isWhite ? 'right' : 'left';
+        }
+
+        if (deltaY > 0) {
+            return isWhite ? 'up' : 'down';
+        } else if (deltaY < 0) {
+            return isWhite ? 'down' : 'up';
+        }
+
+        return null;
+    }
 }
 
 export default BoardHelper;
