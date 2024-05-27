@@ -32,6 +32,9 @@ function Play() {
     const [isPlayerTurn, setIsPlayerTurn] = useState(false);
     const [isInitialBoardSubmitted, setIsInitialBoardSubmitted] = useState(false);
     const [playerMoves, setPlayerMoves] = useState([]);
+    const [messageReceivedFromServerTime, setMessageReceivedFromServerTime] = useState(0);
+    const [whiteTimeRemaining, setWhiteTimeRemaining] = useState(600);
+    const [blackTimeRemaining, setBlackTimeRemaining] = useState(600);
 
     const getMatchId = useCallback(async () => {
         setLoading(true);
@@ -62,6 +65,7 @@ function Play() {
             matchId: matchId,
             playerId: userId,
             userName: userName,
+            playerColor: playerColor,
             data
         };
         sendMessage(message);
@@ -79,10 +83,24 @@ function Play() {
     const submitMove = (move) => {
         const data = {
             boardState: boardState,
-            move: { ...move, turnNumber: turnNumber }
+            move: { ...move, turnNumber: turnNumber },
+            messageReceived: messageReceivedFromServerTime,
+            messageSent: Date.now(),
         }
         handleUserAction('makeMove', data);
         setIsPlayerTurn(false);
+    }
+    function parseTime(milliseconds) {
+        // Convert milliseconds to seconds
+        let totalSeconds = Math.floor(milliseconds / 1000);
+
+        // Extract minutes
+        let minutes = Math.floor(totalSeconds / 60);
+
+        // Extract remaining seconds
+        let seconds = totalSeconds % 60;
+
+        return { minutes: minutes, seconds: seconds };
     }
 
     useEffect(() => {
@@ -119,6 +137,17 @@ function Play() {
                         setIsPlayerTurn(data.isPlayerTurn);
                         setBoardState(data.boardState);
                         setPlayerMoves(prevMoves => [...prevMoves, data.move]);
+                        setMessageReceivedFromServerTime(Date.now);
+
+                        if (data.whiteTimeRemaining) {
+                            let roundedWhiteTime = Math.round(data.whiteTimeRemaining / 1000);
+                            setWhiteTimeRemaining(roundedWhiteTime);
+                        }
+
+                        if (data.blackTimeRemaining) {
+                            let roundedBlackTime = Math.round(data.blackTimeRemaining / 1000);
+                            setBlackTimeRemaining(roundedBlackTime);
+                        }
                     }
                 } catch (error) {
                     console.error('Error parsing WebSocket message:', error);
@@ -168,6 +197,7 @@ function Play() {
                                 player={'opponent'}
                                 matchStatus={matchStatus}
                                 isPlayerTurn={!isPlayerTurn}
+                                timeRemaining={playerColor === 'white' ? blackTimeRemaining : whiteTimeRemaining}
                             />
                             <Board
                                 color={playerColor}
@@ -189,6 +219,7 @@ function Play() {
                                 submitInitialBoardState={() => submitInitialBoardState()}
                                 isInitialBoardSubmitted={isInitialBoardSubmitted}
                                 isPlayerTurn={isPlayerTurn}
+                                timeRemaining={playerColor === 'white' ? whiteTimeRemaining : blackTimeRemaining}
                             />
                         </div>
                         <MoveHistory playerMoves={playerMoves} matchStatus={matchStatus} />

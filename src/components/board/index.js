@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Cell from "./components";
 import InitializeBoardModal from "../initializeBoardModal";
 import BoardHelper from "../../utils/BoardHelper";
@@ -17,6 +17,11 @@ function Board({
     const [playerMove, setPlayerMove] = useState({});
     const [validCellsToMove, setValidCellsToMove] = useState([]);
     const boardHelper = new BoardHelper(playerColor);
+
+    useEffect(() => {
+        setValidCellsToMove([]);
+        setSelectedCell('');
+    }, [matchStatus])
 
     // Function for moving pieces around during gameProper
     const clickMovePiece = (event) => {

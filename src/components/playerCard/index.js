@@ -9,7 +9,8 @@ const PlayerCard = ({
     matchStatus,
     submitInitialBoardState,
     isInitialBoardSubmitted,
-    isPlayerTurn
+    isPlayerTurn,
+    timeRemaining
 }) => {
     return (
         <div className={`flex items-center shadow-md justify-between h-20 bg-gray-100 ${color === 'black' ? 'bg-zinc-700 text-white' : 'text-gray-800'} rounded-sm`}>
@@ -48,6 +49,7 @@ const PlayerCard = ({
                         matchStatus={matchStatus}
                         player={player}
                         isPlayerTurn={isPlayerTurn}
+                        remainingTime={timeRemaining}
                     />
                 )}
             </div>

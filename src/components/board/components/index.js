@@ -16,9 +16,7 @@ const Cell = ({
 
     const [columnNumber, rowNumber] = cellId.split('');
     const boardHelper = new BoardHelper(playerColor);
-    if (matchStatus === 'gameProper' && lastPlayerMove) {
-        console.log(boardHelper.getLastMoveDirection(lastPlayerMove.from, lastPlayerMove.to))
-    }
+
     return (
         <div
             className={`relative flex items-center justify-center bg-gray-200 w-10 h-10 min-w-10 min-h-10 sm:w-16 sm:h-16 md:w-[4.5rem] md:h-[4.5rem] lg:w-20 lg:h-20 ${isSelected ? 'bg-slate-300' : ''} ${isValidCellToMove ? 'bg-green-200' : ''}`}

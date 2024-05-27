@@ -7,10 +7,16 @@ const CountdownTimer = ({
     color,
     matchStatus,
     player,
-    isPlayerTurn
+    isPlayerTurn,
+    remainingTime
 }) => {
     const [timeRemaining, setTimeRemaining] = useState(startingTime * 60);
     const [isPaused, setIsPaused] = useState(false);
+
+
+    useEffect(() => {
+        if (matchStatus === 'gameProper') setTimeRemaining(remainingTime);
+    }, [remainingTime]);
 
     useEffect(() => {
         setIsPaused(pauseTimer);
