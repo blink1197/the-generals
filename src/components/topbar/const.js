@@ -1,7 +1,7 @@
 const Logo = ({ color, width, height }) => {
   return (
     <svg
-      className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
+      className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 z-[100]"
       width="168"
       height="60"
       viewBox="0 0 218 78"
@@ -91,7 +91,7 @@ const Logo = ({ color, width, height }) => {
 
 const HamburgerIcon = ({ color, width, height }) => {
   return (
-    <svg className="scale-[2] absolute left-6 top-6" width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg className="z-[100] scale-[2] absolute left-6 top-6" width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M1 11H15M1 6H15M1 1H15" stroke={color || "#27272A"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 
@@ -100,7 +100,7 @@ const HamburgerIcon = ({ color, width, height }) => {
 
 const CloseIcon = ({ color, width, height }) => {
   return (
-    <svg className="scale-[2] absolute left-6 top-6" width="12" height="12" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg className="z-[100] scale-[2] absolute left-6 top-6" width="12" height="12" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M19 19L10 10M10 10L1 1M10 10L19.0001 1M10 10L1 19.0001" stroke={color || "#27272A"} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
