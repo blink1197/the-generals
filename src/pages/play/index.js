@@ -149,6 +149,13 @@ function Play() {
                             setBlackTimeRemaining(roundedBlackTime);
                         }
                     }
+
+                    if (data.status === 'gameEnded') {
+                        setBoardState(data.boardState);
+                        setPlayerMoves(prevMoves => [...prevMoves, data.move]);
+                        console.log('player: ', data.winnerPlayerId, 'wins');
+                    }
+
                 } catch (error) {
                     console.error('Error parsing WebSocket message:', error);
                 }
