@@ -90,18 +90,6 @@ function Play() {
         handleUserAction('makeMove', data);
         setIsPlayerTurn(false);
     }
-    function parseTime(milliseconds) {
-        // Convert milliseconds to seconds
-        let totalSeconds = Math.floor(milliseconds / 1000);
-
-        // Extract minutes
-        let minutes = Math.floor(totalSeconds / 60);
-
-        // Extract remaining seconds
-        let seconds = totalSeconds % 60;
-
-        return { minutes: minutes, seconds: seconds };
-    }
 
     useEffect(() => {
         if (matchId) {
@@ -151,6 +139,7 @@ function Play() {
                     }
 
                     if (data.status === 'gameEnded') {
+                        setMatchStatus(data.status);
                         setBoardState(data.boardState);
                         setPlayerMoves(prevMoves => [...prevMoves, data.move]);
                         console.log('player: ', data.winnerPlayerId, 'wins');
@@ -178,14 +167,14 @@ function Play() {
             handleUserAction('joinMatch', { userName: userName });
         }
     }, [isSocketConnected, matchId]);
-
+    console.log(matchStatus);
     return (
         <>
             {!matchType &&
                 <MatchOptions handleChangeMatchType={handleChangeMatchType} />
             }
 
-            {(matchType === 'friendly' && matchStatus !== 'gameStart' && matchStatus !== 'gameProper') &&
+            {(matchType === 'friendly' && matchStatus !== 'gameStart' && matchStatus !== 'gameProper' && matchStatus !== 'gameEnded') &&
                 <MatchMakingModal
                     friendlyMatchCode={friendlyMatchCode}
                     getMatchId={getMatchId}
@@ -194,7 +183,7 @@ function Play() {
                 />
             }
 
-            {(matchStatus === 'gameStart' || matchStatus === 'gameProper') &&
+            {(matchStatus !== 'notYetStarted') &&
                 (<div className="relative flex flex-col items-center mx-auto">
                     <div className="flex flex-col mx-auto mt-4 w-fit xl:flex-row">
                         <div>
@@ -203,7 +192,7 @@ function Play() {
                                 userName={opponentUserName}
                                 player={'opponent'}
                                 matchStatus={matchStatus}
-                                isPlayerTurn={!isPlayerTurn}
+                                isPlayerTurn={matchStatus === 'gameEnded' ? false : !isPlayerTurn}
                                 timeRemaining={playerColor === 'white' ? blackTimeRemaining : whiteTimeRemaining}
                             />
                             <Board
@@ -225,7 +214,7 @@ function Play() {
                                 matchStatus={matchStatus}
                                 submitInitialBoardState={() => submitInitialBoardState()}
                                 isInitialBoardSubmitted={isInitialBoardSubmitted}
-                                isPlayerTurn={isPlayerTurn}
+                                isPlayerTurn={matchStatus === 'gameEnded' ? false : isPlayerTurn}
                                 timeRemaining={playerColor === 'white' ? whiteTimeRemaining : blackTimeRemaining}
                             />
                         </div>
