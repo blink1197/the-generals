@@ -13,7 +13,7 @@ const PlayerCard = ({
     timeRemaining
 }) => {
     return (
-        <div className={`flex items-center shadow-md justify-between h-20 bg-gray-100 ${color === 'black' ? 'bg-zinc-700 text-white' : 'text-gray-800'} rounded-sm`}>
+        <div className={`flex items-center shadow-md justify-between h-20 bg-gray-100  ${color === 'black' ? 'bg-zinc-700 text-white dark:bg-zinc-800 ' : 'text-gray-800'} rounded-sm`}>
             <div className="flex items-center m-2 grow">
                 <div className="m-2 bg-cover rounded-sm w-14 h-14 bg-defaultDP"></div>
                 <div className="flex flex-col justify-between my-2 grow">

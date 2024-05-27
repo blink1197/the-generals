@@ -18,7 +18,7 @@ function App() {
       <SideBar />
       <div className='relative flex-grow h-full min-w-[360px]' >
         <TopBar />
-        <div className='h-full pt-16 overflow-auto md:pt-0'>
+        <div className='h-full pt-16 overflow-auto md:pt-0 dark:bg-zinc-600 dark:text-white'>
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/play' element={<Play />} />

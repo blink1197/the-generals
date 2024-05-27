@@ -48,7 +48,7 @@ const Piece = ({ pieceId }) => {
 
     return (
         <div
-            className={`flex items-center justify-center w-5/6 bg-white border border-gray-400 rounded-md shadow-md h-5/6 ${pieceId.includes('B') ? 'bg-zinc-700' : ''}`}
+            className={`flex items-center justify-center w-5/6 bg-white border border-gray-400 rounded-md shadow-md h-5/6 ${pieceId.includes('B') ? 'bg-zinc-700' : 'dark:border dark:border-gray-600'}`}
         >
             {PieceComponent ? <PieceComponent /> : null}
         </div>

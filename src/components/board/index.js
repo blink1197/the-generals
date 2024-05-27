@@ -97,7 +97,7 @@ function Board({
     const cells = boardHelper.generateCellsArray();
 
     return (
-        <div className="flex items-center justify-center mx-auto mt-4 mb-6 bg-white">
+        <div className="flex items-center justify-center mx-auto mt-4 mb-6 bg-white dark:bg-gray-600">
             <div className="relative grid grid-cols-9 sm:gap-0.5 gap-[1px] md:gap-1">
                 {(!matchStatus === 'gameProper' || matchStatus === 'gameStart') && <InitializeBoardModal isInitialBoardSubmitted={isInitialBoardSubmitted} />}
                 {cells.map((cell) => (

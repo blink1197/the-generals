@@ -53,10 +53,10 @@ function MatchMakingModal({ friendlyMatchCode, getMatchId, setFriendlyMatchCode,
     };
 
     return (
-        <div className="absolute z-40 flex flex-col items-center w-5/6 max-w-xl transform -translate-x-1/2 -translate-y-1/2 bg-white border rounded-lg h-[30%] top-1/3 left-1/2  min-w-64 md:h-[27%] shadow-md">
+        <div className="absolute z-40 flex flex-col items-center w-5/6 max-w-xl transform -translate-x-1/2 -translate-y-1/2 bg-white border rounded-lg h-[30%] top-1/3 left-1/2  min-w-64 md:h-[27%] shadow-md dark:bg-zinc-500">
             {!lobbyMode && (
                 <div className="flex items-center w-full h-full justify-evenly">
-                    <button className="w-[40%] p-2 rounded-md  h-2/3 text-balance bg-gray-100 shadow-sm border border-neutral-200"
+                    <button className="w-[40%] p-2 rounded-md  h-2/3 text-balance bg-gray-100 shadow-sm border border-neutral-200 dark:bg-zinc-700"
                         name="create"
                         onClick={() => {
                             getMatchId();
@@ -67,7 +67,7 @@ function MatchMakingModal({ friendlyMatchCode, getMatchId, setFriendlyMatchCode,
                         <h2 className="text-xs h-3/4">Generate a match code and share it with your friend.</h2>
                     </button>
 
-                    <button className="w-[40%] p-2 rounded-md  h-2/3 text-balance bg-gray-100 shadow-sm border border-neutral-200"
+                    <button className="w-[40%] p-2 rounded-md  h-2/3 text-balance bg-gray-100 shadow-sm border border-neutral-200 dark:bg-zinc-700"
                         name="join"
                         onClick={() => {
                             setLobbyMode('join');
@@ -84,7 +84,7 @@ function MatchMakingModal({ friendlyMatchCode, getMatchId, setFriendlyMatchCode,
                     <h2 className="mt-4 text-center">Send this match code to your friend.</h2>
                     <input
                         ref={matchCodeRef} // Ref for the textarea
-                        className="flex items-center w-5/6 h-12 m-4 mb-1 text-lg text-center bg-gray-100 border rounded-md border-neutral-600"
+                        className="flex items-center w-5/6 h-12 m-4 mb-1 text-lg text-center bg-gray-100 border rounded-md border-neutral-600 dark:text-zinc-700"
                         value={friendlyMatchCode}
                         disabled
 
@@ -103,7 +103,7 @@ function MatchMakingModal({ friendlyMatchCode, getMatchId, setFriendlyMatchCode,
                 <div className="flex flex-col items-center w-full">
                     <h2 className="mt-2 text-center">Type the match code and click Join.</h2>
                     <input type="text" ref={matchCodeRef} // Ref for the textarea
-                        className="flex items-center w-5/6 h-12 m-4 text-lg text-center bg-gray-100 border rounded-md border-neutral-600"
+                        className="flex items-center w-5/6 h-12 m-4 text-lg text-center bg-gray-100 border rounded-md border-neutral-600 dark:text-zinc-700"
                     />
                     <Button name="joinMatch" text="Join" onClick={handleJoinMatch} />
                 </div>

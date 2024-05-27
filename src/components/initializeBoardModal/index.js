@@ -1,6 +1,6 @@
 function InitializeBoardModal({ isInitialBoardSubmitted }) {
     return (
-        <div className="absolute z-30 flex flex-col items-center w-2/3 h-32 p-2 mx-auto text-center transform -translate-x-1/2 -translate-y-1/2 bg-gray-100 border border-gray-300 rounded-md top-1/4 left-1/2 justify-evenly">
+        <div className="absolute z-30 flex flex-col items-center w-2/3 h-32 p-2 mx-auto text-center transform -translate-x-1/2 -translate-y-1/2 bg-gray-100 border border-gray-300 rounded-md top-1/4 left-1/2 justify-evenly dark:text-gray-900 dark:border dark:border-gray-900">
             {!isInitialBoardSubmitted ? (
                 <>
                     <h1 className="text-lg font-semibold">
