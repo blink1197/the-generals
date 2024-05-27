@@ -22,7 +22,7 @@ const MoveHistory = ({ playerMoves, matchStatus }) => {
             <div className="w-full overflow-y-scroll max-h-32 no-scrollbar">
                 <table className="w-full text-[12px] text-center table-auto">
                     <tbody className="w-full">
-                        {(matchStatus === 'gameProper' && playerMoves.length > 1) &&
+                        {((matchStatus === 'gameProper' || matchStatus === 'gameEnded') && playerMoves.length > 1) &&
                             playerMoves.slice(1).reverse().map((move, index) => (
                                 <tr key={index} className={`${index % 2 !== 0 ? 'bg-gray-100' : 'bg-white'}`}>
                                     <td className="w-1/4">{move.turnNumber}</td>

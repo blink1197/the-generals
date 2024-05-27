@@ -31,7 +31,7 @@ const PlayerCard = ({
                                 </button>)
                             }
                         </div>
-                        {player === 'user' &&
+                        {(player === 'user' && matchStatus !== 'gameEnded') &&
                             (<button className="text-[12px] text-white border border-red-400 bg-red-400 hover:border-red-400 rounded-md h-3/4 hover:text-red-400 hover:bg-white hover:border sm:w-18 sm:text-md md:w-20 md:text-lg md:h-5/6">
                                 <h1 className="mx-2">Resign</h1>
                             </button>)}
@@ -40,11 +40,11 @@ const PlayerCard = ({
             </div>
             <div className={`flex items-center justify-center m-2 ml-0 rounded-sm ${(isPlayerTurn && matchStatus === 'gameProper') ? 'bg-green-500' : color === 'black' ? 'bg-zinc-500' : 'bg-zinc-300'}`}>
 
-                {((matchStatus === 'gameStart' && player === 'user' && !isInitialBoardSubmitted) || matchStatus === 'gameProper') && (
+                {((matchStatus === 'gameStart' && player === 'user' && !isInitialBoardSubmitted) || matchStatus === 'gameProper' || matchStatus === 'gameEnded') && (
                     <CountdownTimer
                         startingTime={matchStatus === 'gameStart' ? 3 : 10}
                         submitInitialBoardState={matchStatus === 'gameStart' ? submitInitialBoardState : undefined}
-                        pauseTimer={matchStatus === 'gameProper' && !isPlayerTurn}
+                        pauseTimer={(matchStatus === 'gameProper' && !isPlayerTurn) || matchStatus === 'gameEnded'}
                         color={color}
                         matchStatus={matchStatus}
                         player={player}
