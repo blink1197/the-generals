@@ -18,7 +18,7 @@ function Play() {
     const [friendlyMatchCode, setFriendlyMatchCode] = useState('');
     const [matchId, setMatchId] = useState(null);
     const userId = `p#${uuidv4()}`;
-    const userName = `user-${userId.slice(2, 5)}`;
+    const [userName, setUserName] = useState(`user-${userId.slice(2, 5)}`); //Random user name during dev
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const [socket, setSocket] = useState(null);
@@ -27,19 +27,20 @@ function Play() {
     const [matchStatus, setMatchStatus] = useState("notYetStarted");
     const [playerColor, setPlayerColor] = useState("white");
     const [connectionId, setConnectionId] = useState("");
-    const [playerUserName, setPlayerUserName] = useState("User-Player");
     const [boardState, setBoardState] = useState({});
-    const [playerMove, setPlayerMove] = useState({});
     const [turnNumber, setTurnNumber] = useState(0);
     const [isPlayerTurn, setIsPlayerTurn] = useState(false);
     const [isInitialBoardSubmitted, setIsInitialBoardSubmitted] = useState(false);
     const [playerMoves, setPlayerMoves] = useState([]);
+    const [messageReceivedFromServerTime, setMessageReceivedFromServerTime] = useState(0);
+    const [whiteTimeRemaining, setWhiteTimeRemaining] = useState(600);
+    const [blackTimeRemaining, setBlackTimeRemaining] = useState(600);
 
     const getMatchId = useCallback(async () => {
         setLoading(true);
         setError(null);
         try {
-            const { message } = await AxiosService.postData('/create-match', { userId });
+            const { message } = await AxiosService.postData('/create-match', { userId, matchType: 'friendly' });
             setFriendlyMatchCode(message.matchCode);
             setMatchId(message.matchId);
 
@@ -64,6 +65,7 @@ function Play() {
             matchId: matchId,
             playerId: userId,
             userName: userName,
+            playerColor: playerColor,
             data
         };
         sendMessage(message);
@@ -81,10 +83,24 @@ function Play() {
     const submitMove = (move) => {
         const data = {
             boardState: boardState,
-            move: { ...move, turnNumber: turnNumber }
+            move: { ...move, turnNumber: turnNumber },
+            messageReceived: messageReceivedFromServerTime,
+            messageSent: Date.now(),
         }
         handleUserAction('makeMove', data);
         setIsPlayerTurn(false);
+    }
+    function parseTime(milliseconds) {
+        // Convert milliseconds to seconds
+        let totalSeconds = Math.floor(milliseconds / 1000);
+
+        // Extract minutes
+        let minutes = Math.floor(totalSeconds / 60);
+
+        // Extract remaining seconds
+        let seconds = totalSeconds % 60;
+
+        return { minutes: minutes, seconds: seconds };
     }
 
     useEffect(() => {
@@ -101,7 +117,6 @@ function Play() {
             });
 
             newSocket.addEventListener('message', (event) => {
-                //console.log('Message from server:', event.data);
                 try {
                     const data = JSON.parse(event.data);
                     if (data.status === 'gameStart') {
@@ -110,8 +125,6 @@ function Play() {
                         setOpponentUserName(data.opponentUserName);
                         setConnectionId(data.connectionId);
 
-                        console.log(data);
-
                         const initialBoardState = data.playerColor === 'white'
                             ? INITIAL_BOARD_STATE_WHITE
                             : INITIAL_BOARD_STATE_BLACK;
@@ -119,13 +132,22 @@ function Play() {
                     }
 
                     if (data.status === 'gameProper') {
-
                         setMatchStatus(data.status);
                         setTurnNumber(data.turnNumber);
                         setIsPlayerTurn(data.isPlayerTurn);
                         setBoardState(data.boardState);
                         setPlayerMoves(prevMoves => [...prevMoves, data.move]);
-                        console.log(data);
+                        setMessageReceivedFromServerTime(Date.now);
+
+                        if (data.whiteTimeRemaining) {
+                            let roundedWhiteTime = Math.round(data.whiteTimeRemaining / 1000);
+                            setWhiteTimeRemaining(roundedWhiteTime);
+                        }
+
+                        if (data.blackTimeRemaining) {
+                            let roundedBlackTime = Math.round(data.blackTimeRemaining / 1000);
+                            setBlackTimeRemaining(roundedBlackTime);
+                        }
                     }
                 } catch (error) {
                     console.error('Error parsing WebSocket message:', error);
@@ -150,8 +172,6 @@ function Play() {
         }
     }, [isSocketConnected, matchId]);
 
-    //console.log(playerMoves);
-    //console.log(matchId);
     return (
         <>
             {!matchType &&
@@ -177,6 +197,7 @@ function Play() {
                                 player={'opponent'}
                                 matchStatus={matchStatus}
                                 isPlayerTurn={!isPlayerTurn}
+                                timeRemaining={playerColor === 'white' ? blackTimeRemaining : whiteTimeRemaining}
                             />
                             <Board
                                 color={playerColor}
@@ -184,10 +205,10 @@ function Play() {
                                 boardState={boardState}
                                 setBoardState={setBoardState}
                                 isInitialBoardSubmitted={isInitialBoardSubmitted}
-                                setIsPlayerTurn={setIsPlayerTurn}
                                 isPlayerTurn={isPlayerTurn}
                                 playerColor={playerColor}
                                 submitMove={submitMove}
+                                playerMoves={playerMoves}
 
                             />
                             <PlayerCard
@@ -198,6 +219,7 @@ function Play() {
                                 submitInitialBoardState={() => submitInitialBoardState()}
                                 isInitialBoardSubmitted={isInitialBoardSubmitted}
                                 isPlayerTurn={isPlayerTurn}
+                                timeRemaining={playerColor === 'white' ? whiteTimeRemaining : blackTimeRemaining}
                             />
                         </div>
                         <MoveHistory playerMoves={playerMoves} matchStatus={matchStatus} />

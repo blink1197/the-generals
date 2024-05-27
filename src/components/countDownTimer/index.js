@@ -3,10 +3,20 @@ import React, { useState, useEffect } from 'react';
 const CountdownTimer = ({
     startingTime,
     pauseTimer,
-    submitInitialBoardState
+    submitInitialBoardState,
+    color,
+    matchStatus,
+    player,
+    isPlayerTurn,
+    remainingTime
 }) => {
     const [timeRemaining, setTimeRemaining] = useState(startingTime * 60);
     const [isPaused, setIsPaused] = useState(false);
+
+
+    useEffect(() => {
+        if (matchStatus === 'gameProper') setTimeRemaining(remainingTime);
+    }, [remainingTime]);
 
     useEffect(() => {
         setIsPaused(pauseTimer);
@@ -46,8 +56,8 @@ const CountdownTimer = ({
     };
 
     return (
-        <div className='flex'>
-            <span className={`w-[70px] m-3 text-2xl font-bold ${timerStyle(timeRemaining)}`}>{formatTime(timeRemaining)}</span>
+        <div className='flex tracking-widest text-center'>
+            <span className={`w-[70px] m-3 text-2xl drop-shadow-sm font-bold ${timerStyle(timeRemaining)} ${(matchStatus === 'gameProper' && isPlayerTurn) && 'text-white'}`}>{formatTime(timeRemaining)}</span>
         </div>
     );
 };
