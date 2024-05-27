@@ -10,7 +10,7 @@ const SideBar = () => {
     const [isHoverAccount, setIsHoverAccount] = useState(false);
 
     return (
-        <div className="flex-col items-center justify-between hidden md:flex w-14 bg-neutral-100 lg:w-60 h-dvh">
+        <div className="flex-col items-center justify-between hidden md:flex w-14 bg-neutral-100 lg:w-60 h-dvh ">
             <div className="my-4">
                 <Logo />
                 <LogoSmall />

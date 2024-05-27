@@ -9,6 +9,7 @@ import Settings from './pages/settings';
 import Account from './pages/account';
 import Help from './pages/help';
 import TopBar from './components/topbar';
+import NotFound from './pages/notFound';
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
             <Route path='/account' element={<Account />} />
             <Route path='/settings' element={<Settings />} />
             <Route path='/help' element={<Help />} />
+            <Route path='*' element={<NotFound />} />
           </Routes>
         </div>
       </div>
